@@ -11,41 +11,48 @@ namespace location
     {
         static void Main(string[] args)
         {
-            try
-            {
-                int c;
-                TcpClient client = new TcpClient();
-                client.Connect("whois.net.dcs.hull.ac.uk", 43);
-                StreamWriter sw = new StreamWriter(client.GetStream());
-                StreamReader sr = new StreamReader(client.GetStream());
-                // sw.WriteLine(args[0] + " " + args[1]);
-                for (int x = 0; x < args.Length; x++) {
-                    if (x == args.Length - 1)
-                    {
-                        sw.WriteLine(args[x]);
-                    }
-                    else {
-                         sw.Write(args[x] + " ");
-                    }
-                }
-                
-                sw.Flush();
+            
+                try
+                {
+                    string exception = args[0];
+                    TcpClient client = new TcpClient();
+                    client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                    StreamWriter sw = new StreamWriter(client.GetStream());
+                    StreamReader sr = new StreamReader(client.GetStream());
 
-                string holder = sr.ReadToEnd();
-                if (holder == "OK\r\n" && args.Length >= 2)
-                {
-                    Console.WriteLine(args[0] + " location changed to be " + args[1]);
-                } else if (holder != "ERROR: no entries found\r\n") {
-                    Console.WriteLine(args[0] + " is " + holder);
+                    for (int x = 0; x < args.Length; x++)
+                    {
+                        if (x == args.Length - 1)
+                        {
+                            sw.WriteLine(args[x]);
+                        }
+                        else
+                        {
+                            sw.Write(args[x] + " ");
+                        }
+                    }
+
+                    sw.Flush();
+
+                    string holder = sr.ReadToEnd();
+                    if (holder == "OK\r\n" && args.Length >= 2)
+                    {
+                        Console.WriteLine(args[0] + " location changed to be " + args[1]);
+                    }
+                    else if (holder != "ERROR: no entries found\r\n")
+                    {
+                        Console.WriteLine(args[0] + " is " + holder.TrimEnd());
+                    }
+                    else
+                    {
+                        Console.WriteLine(holder);
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    Console.WriteLine(holder);
+                    Console.WriteLine(e.Message);
                 }
-            }
-            catch (Exception e) {
-                Console.WriteLine(e.Message);
-            }
+            
             
         }
     }
