@@ -35,7 +35,7 @@ namespace locationserver
                     sw.Flush();
                     m_SocketStream.Close();
                     m_Connection.Close();
-                    m_Manager.SaveElements();
+                    //m_Manager.SaveElements();
                 }
             }
             catch (Exception e) {
