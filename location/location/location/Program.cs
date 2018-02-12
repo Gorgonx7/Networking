@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Sockets;
+using System.Net;
 namespace location
 {
     class Program
@@ -16,7 +17,7 @@ namespace location
                 {
                     string exception = args[0];
                     TcpClient client = new TcpClient();
-                    client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                    client.Connect("150.237.45.65", 43);
                     StreamWriter sw = new StreamWriter(client.GetStream());
                     StreamReader sr = new StreamReader(client.GetStream());
 
@@ -34,7 +35,8 @@ namespace location
 
                     sw.Flush();
 
-                    string holder = sr.ReadToEnd();
+
+                string holder = sr.ReadToEnd();
                     if (holder == "OK\r\n" && args.Length >= 2)
                     {
                         Console.WriteLine(args[0] + " location changed to be " + args[1]);
