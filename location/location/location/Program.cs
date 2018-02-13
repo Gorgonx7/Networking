@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
@@ -12,50 +14,55 @@ namespace location
     {
         static void Main(string[] args)
         {
-            
-                try
+
+           
+
+
+            try
+            {
+
+                TcpClient client = new TcpClient();
+                client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                StreamWriter sw = new StreamWriter(client.GetStream());
+                StreamReader sr = new StreamReader(client.GetStream());
+                string exception = args[0];
+
+
+                for (int x = 0; x < args.Length; x++)
                 {
-                    string exception = args[0];
-                    TcpClient client = new TcpClient();
-                    client.Connect("150.237.45.65", 43);
-                    StreamWriter sw = new StreamWriter(client.GetStream());
-                    StreamReader sr = new StreamReader(client.GetStream());
-
-                    for (int x = 0; x < args.Length; x++)
+                    if (x == args.Length - 1)
                     {
-                        if (x == args.Length - 1)
-                        {
-                            sw.WriteLine(args[x]);
-                        }
-                        else
-                        {
-                            sw.Write(args[x] + " ");
-                        }
-                    }
-
-                    sw.Flush();
-
-
-                string holder = sr.ReadToEnd();
-                    if (holder == "OK\r\n" && args.Length >= 2)
-                    {
-                        Console.WriteLine(args[0] + " location changed to be " + args[1]);
-                    }
-                    else if (holder != "ERROR: no entries found\r\n")
-                    {
-                        Console.WriteLine(args[0] + " is " + holder.TrimEnd());
+                        sw.WriteLine(args[x]);
                     }
                     else
                     {
-                        Console.WriteLine(holder);
+                        sw.Write(args[x] + " ");
                     }
                 }
-                catch (Exception e)
+
+                sw.Flush();
+
+
+                string holder = sr.ReadToEnd();
+                if (holder == "OK\r\n" && args.Length >= 2)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine(args[0] + " location changed to be " + args[1]);
                 }
-            
-            
+                else if (holder != "ERROR: no entries found\r\n")
+                {
+                    Console.WriteLine(args[0] + " is " + holder.TrimEnd());
+                }
+                else
+                {
+                    Console.WriteLine(holder);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+
         }
     }
 }
