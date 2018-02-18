@@ -11,7 +11,7 @@ namespace locationserver
 {
     class Program
     {
-        static ElementManager m_Manager = new ElementManager();
+        public static ElementManager m_Manager = new ElementManager();
         
         static void Main(string[] args)
         {
@@ -31,7 +31,7 @@ namespace locationserver
                 
 
                 m_Connection = m_Listener.AcceptSocket();
-                AcceptConnection();
+                
                 m_SocketStream = new NetworkStream(m_Connection);
                 StreamReader sr = new StreamReader(m_SocketStream);
                 StreamWriter sw = new StreamWriter(m_SocketStream);
@@ -66,10 +66,7 @@ namespace locationserver
             }
             return Output;
         }
-        public static void AcceptConnection() {
-            Thread thread = new Thread(Listen);
-            thread.Start();
-        }
+        
 
     }
 }
