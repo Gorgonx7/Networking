@@ -22,7 +22,7 @@ namespace location
             {
 
                 TcpClient client = new TcpClient();
-                client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                client.Connect("150.237.45.58", 43);
                 StreamWriter sw = new StreamWriter(client.GetStream());
                 StreamReader sr = new StreamReader(client.GetStream());
                 string exception = args[0];
@@ -54,6 +54,7 @@ namespace location
                 }
                 else
                 {
+
                     Console.WriteLine(holder);
                 }
             }

@@ -12,61 +12,50 @@ namespace locationserver
     class Program
     {
         public static ElementManager m_Manager = new ElementManager();
-        
+
         static void Main(string[] args)
         {
-
-            Thread thread = new Thread(Listen);
-            thread.Start();
-            
-        }
-        public static void Listen() {
             TcpListener m_Listener;
             Socket m_Connection;
-            NetworkStream m_SocketStream;
+
             try
             {
                 m_Listener = new TcpListener(IPAddress.Any, 43);
                 m_Listener.Start();
-                
+                Console.WriteLine(">> " + "Server Started");
+                int counter = 0;
+                while (true)
+                {
+                    m_Connection = m_Listener.AcceptSocket();
+                    Console.WriteLine(" >> " + "Client No:" + counter + " started!");
+                    ClientHandler clientHandler = new ClientHandler();
+                    clientHandler.startClient(m_Connection, counter);
+                    
+                    //m_Connection.Close();
 
-                m_Connection = m_Listener.AcceptSocket();
-                
-                m_SocketStream = new NetworkStream(m_Connection);
-                StreamReader sr = new StreamReader(m_SocketStream);
-                StreamWriter sw = new StreamWriter(m_SocketStream);
+                }
 
 
-                sw.WriteLine(doRequest(sr.ReadLine()));
-                sw.Flush();
-                m_SocketStream.Close();
-                m_Connection.Close();
-              //m_Manager.SaveElements();
-                
+
+
+
+                //m_Manager.SaveElements();
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
 
             }
-        }
-        public static string doRequest(string pRequest) {
-            string Output = "";
-            /*
-             * Name | Location
-             */
-            string[] SplitRequest = pRequest.Split(' ');
-            if (SplitRequest.Length == 2) {
-                if (m_Manager.UpdateLocation(SplitRequest[0], SplitRequest[1])) {
-                    Output = "OK";
-                }
+            finally {
+                
             }
-            if (SplitRequest.Length == 1) {
-                Output = m_Manager.GetLocation(SplitRequest[0]);
-            }
-            return Output;
+
+
         }
-        
+
+
+
 
     }
 }
