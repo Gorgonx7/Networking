@@ -15,14 +15,16 @@ namespace location
         static void Main(string[] args)
         {
 
-           
+            Message message = new Message(args);
+            MessageWrapper.SendMessage(message);
 
 
-            try
+           /* try
             {
 
                 TcpClient client = new TcpClient();
-                client.Connect("150.237.45.58", 43);
+                client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                client.GetStream().ReadTimeout = 1000;
                 StreamWriter sw = new StreamWriter(client.GetStream());
                 StreamReader sr = new StreamReader(client.GetStream());
                 string exception = args[0];
@@ -57,12 +59,13 @@ namespace location
 
                     Console.WriteLine(holder);
                 }
+                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
-
+            */
 
         }
     }

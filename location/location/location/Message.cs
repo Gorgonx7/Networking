@@ -23,20 +23,39 @@ namespace location
         public Message(string[] args)
         {
             CheckProtocols(args);
-            
+
         }
-    
-    private void CheckProtocols(string[] args)
-    {
-            
-        for (var x = 0; x < args.Length; x++)
+        public MessageType getType() {
+            return m_Type;
+        }
+        public string GetName() {
+            return m_Username;
+        }
+        public string GetLocation() {
+            return m_Location;
+        }
+        public MessageProtocol GetProtocol() {
+            return m_Protocol;
+        }
+        public int GetPort() {
+            return m_Port;
+        }
+        public string GetAddress()
         {
+            return m_HostName;
+        }
+        private void CheckProtocols(string[] args)
+        {
+
+            for (var x = 0; x < args.Length; x++)
+            {
                 if (args[x][0] == '-')
                 {
                     switch (args[x])
                     {
                         case "-p":
                             m_Port = int.Parse(args[x + 1]);
+                            
                             x += 1;
                             break;
                         case "-h1":
@@ -57,6 +76,7 @@ namespace location
                             break;
                         case "-h":
                             m_HostName = args[x + 1];
+                            
                             x += 1;
                             break;
                         default:
@@ -89,8 +109,9 @@ namespace location
                     }
                 }
 
+            }
         }
-    }
+        
         public override string ToString()
         {
             string Output = "";
@@ -107,7 +128,7 @@ namespace location
                           Content-Length:<space><length><CR><LF>
                           <optional header lines><CR><LF>
                           <location>*/
-                        Output = "POST /" + m_Username + " HTTP/1.0\r\n" + "Content-Length: " + m_Location.Length + "\r\n";
+                        Output = "POST /" + m_Username + " HTTP/1.0\r\n" + "Content-Length: " + m_Location.Length + "\r\n\r\n" + m_Location;
                     }
                     break;
                 case MessageProtocol.HTTP11:
@@ -116,8 +137,8 @@ namespace location
                         /*GET<space>/?name =< name >< space > HTTP / 1.1 < CR >< LF >
                           Host :< space >< hostname >< CR >< LF >
                           < optional header lines>< CR >< LF >*/
-                        Output = "GET /?name=" + m_Username + " HTTP/1.1\r\nHost: " + m_HostName + "\r\n";  
-                     }
+                        Output = "GET /?name=" + m_Username + " HTTP/1.1\r\n" + "Host: " + m_HostName + "\r\n\r\n";
+                    }
                     else
                     {
                         /*POST<space>/<space>HTTP/1.1<CR><LF>
@@ -126,7 +147,7 @@ namespace location
                           <optional header lines><CR><LF>
                           name=<name>&location=<location>*/
                         string content = "name=" + m_Username + "&location=" + m_Location;
-                          Output = "POST / HTTP/1.1\r\nHost: " + m_HostName +"\r\nContent-Length: " + content.Length + "\r\n";
+                        Output = "POST / HTTP/1.1\r\nHost: " + m_HostName + "\r\nContent-Length: " + content.Length + "\r\n\r\n" + "name=" + m_Username + "&location=" + m_Location;
                     }
                     break;
                 case MessageProtocol.HTTP9:
@@ -136,7 +157,7 @@ namespace location
                     }
                     else
                     {
-                        Output = "PUT /" + m_Username + "\r\n\r\n" + m_Location; 
+                        Output = "PUT /" + m_Username + "\r\n\r\n" + m_Location;
                     }
                     break;
                 case MessageProtocol.WhoIs:
@@ -144,7 +165,8 @@ namespace location
                     {
                         Output = m_Username;
                     }
-                    else {
+                    else
+                    {
                         Output = m_Username + " " + m_Location;
                     }
                     break;
