@@ -137,7 +137,7 @@ namespace location
                         /*GET<space>/?name =< name >< space > HTTP / 1.1 < CR >< LF >
                           Host :< space >< hostname >< CR >< LF >
                           < optional header lines>< CR >< LF >*/
-                        Output = "GET /?name=" + m_Username + " HTTP/1.1\r\n" + "Host: " + m_HostName + "\r\n\r\n";
+                        Output = "GET /?name=" + m_Username + " HTTP/1.1\r\n" + "Host: " + m_HostName + "\r\n";
                     }
                     else
                     {
