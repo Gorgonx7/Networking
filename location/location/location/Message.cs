@@ -31,6 +31,9 @@ namespace location
         public string GetName() {
             return m_Username;
         }
+        public int GetTimeout() {
+            return m_Timeout;
+        }
         public string GetLocation() {
             return m_Location;
         }

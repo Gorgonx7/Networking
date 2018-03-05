@@ -32,7 +32,10 @@ namespace location
         {
             TcpClient client = new TcpClient();
             client.Connect(m_Address, m_Port);
-            client.GetStream().ReadTimeout = 1000;
+            if (pMessage.GetTimeout() != 0)
+            {
+                client.GetStream().ReadTimeout = pMessage.GetTimeout();
+            }
             StreamWriter sw = new StreamWriter(client.GetStream());
             StreamReader sr = new StreamReader(client.GetStream());
 
