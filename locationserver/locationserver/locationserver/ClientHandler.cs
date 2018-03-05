@@ -118,9 +118,12 @@ namespace locationserver
                 {
                     case "POST":
                         m_Type = Type.update;
+                        m_Name = args[0].Split(' ')[1].Trim('/');
+                        m_Location = args[3];
                         break;
                     case "GET":
                         m_Type = Type.lookup;
+                        m_Name = args[0].Split(' ')[1].Trim('/').Trim('?');
                         break;
                     default:
                         throw new Exception("Unexpected protocol message registered as 1.1");
@@ -149,9 +152,24 @@ namespace locationserver
                 {
                     case "POST":
                         m_Type = Type.update;
+                        m_Name = args[4].Split('=')[1].Split('&')[0];
+                        m_Location = args[4].Split('=')[2];
                         break;
                     case "GET":
                         m_Type = Type.lookup;
+                        string Holder = "";
+                        for (int index = "GET /?name=".Length; index < args[0].Length; index++)
+                        {
+                            if ((int)args[0][index] == 13)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Holder += args[0][index];
+                            }
+                        }
+                        m_Name = Holder.Substring(0, Holder.Length - "HTTP/1.1".Length).Trim();
                         break;
                     default:
                         throw new Exception("Unexpected protocol message registered as 1.1");
@@ -166,12 +184,27 @@ namespace locationserver
                 {
                     /*GET<space>/<name><CR><LF>*/
                     m_Type = Type.lookup;
+                    string Holder = "";
+                    for (int index = 5; index < args[0].Length; index++)
+                    {
+                        if ((int)args[0][index] == 13)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Holder += args[0][index];
+                        }
+                    }
+                    m_Name = Holder;
                 }
                 else {
                     /*PUT<space>/<name><CR><LF>
                       <CR><LF>
                       <location><CR><LF>*/
                     m_Type = Type.update;
+                    m_Name = args[0].Split(' ')[1].Trim('/');
+                    m_Location = args[2];
                 }
             }
             else

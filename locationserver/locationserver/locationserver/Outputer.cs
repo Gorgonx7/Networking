@@ -100,7 +100,8 @@ namespace locationserver
                             Content-Type:<space>text/plain<CR><LF>
                             <optional header lines><CR><LF>
                             <location><CR><LF>*/
-                        output = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n" + Program.m_Manager.GetLocation(pName);
+                        string Holder = Program.m_Manager.GetLocation(pName);
+                        output = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n" + Holder;
                         pWriter.WriteLine(output);
                     }
                     break;
@@ -121,7 +122,8 @@ namespace locationserver
                             Content-Type:<space>text/plain<CR><LF>
                             <CR><LF>
                             <location><CR><LF>*/
-                        output = "HTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n" + Program.m_Manager.GetLocation(pName);
+                        string holder = Program.m_Manager.GetLocation(pName);
+                        output = "HTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n" + holder;
                         pWriter.WriteLine(output);
                     }
                     break;
