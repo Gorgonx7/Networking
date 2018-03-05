@@ -122,7 +122,7 @@ namespace locationserver
                             <CR><LF>
                             <location><CR><LF>*/
                         output = "HTTP/0.9 200 OK\r\nContent-Type: text/plain\r\n\r\n" + Program.m_Manager.GetLocation(pName);
-                        pWriter.WriteLine();
+                        pWriter.WriteLine(output);
                     }
                     break;
             }

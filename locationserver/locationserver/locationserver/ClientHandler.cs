@@ -49,8 +49,22 @@ namespace locationserver
                 Console.WriteLine(" >> " + "From client-" + m_ClientNumber);
                 List<string> data = new List<string>();
                 int counter = 0;
-               
-                    data.Add(sr.ReadLine());
+                string holder = "";
+                while (sr.Peek() > -1)
+                {
+                    if (sr.Peek() == 13)
+                    {
+                        data.Add(holder);
+                        holder = "";
+                        sr.Read();
+                        sr.Read();
+                        
+                    }
+                    else {
+                        holder += (char)sr.Read();
+                    }
+                    
+                }
 
                
                 
@@ -60,6 +74,8 @@ namespace locationserver
                     dataFromClient[x] = data[x];
                     Console.WriteLine(dataFromClient[x]);
                 }
+
+
                 Phase(dataFromClient);
                 switch (m_Type)
                 {
@@ -84,17 +100,79 @@ namespace locationserver
         }
         private void Phase(string[] args)
         {
-            if (args.Contains("HTTP/1.0"))
+            if (args[0].Split(' ').Contains("HTTP/1.0") && args[0].Split(' ').Length == 3)
             {
+                /*  GET<space>/?<name><space>HTTP/1.0<CR><LF>
+                    <optional header lines><CR><LF>*/
+
+                /*
+                    POST<space>/<name><space>HTTP/1.0<CR><LF>
+                    Content-Length:<space><length><CR><LF>
+                    <optional header lines><CR><LF>
+                    <location>
+
+                 */
                 m_Protocol = Protocol.HTTP1;
+                string[] holder = args[0].Split(' ');
+                switch (holder[0])
+                {
+                    case "POST":
+                        m_Type = Type.update;
+                        break;
+                    case "GET":
+                        m_Type = Type.lookup;
+                        break;
+                    default:
+                        throw new Exception("Unexpected protocol message registered as 1.1");
+
+                }
             }
-            else if (args.Contains("HTTP/1.1"))
+            else if (args[0].Split(' ').Contains("HTTP/1.1") && args[0].Split(' ').Length == 3)
             {
+
                 m_Protocol = Protocol.HTTP11;
+                /*
+                    GET<space>/?name=<name><space>HTTP/1.1<CR><LF>
+                    Host:<space><hostname><CR><LF>
+                    <optional header lines><CR><LF>
+                    
+                
+                POST<space>/<space>HTTP/1.1<CR><LF>
+                Host:<space><hostname><CR><LF>
+                Content-Length:<space><length><CR><LF>
+                <optional header lines><CR><LF>
+                name=<name>&location=<location>
+
+                 */
+                string[] holder = args[0].Split(' ');
+                switch (holder[0])
+                {
+                    case "POST":
+                        m_Type = Type.update;
+                        break;
+                    case "GET":
+                        m_Type = Type.lookup;
+                        break;
+                    default:
+                        throw new Exception("Unexpected protocol message registered as 1.1");
+                        
+                }
+                
             }
-            else if (args[0].Split(' ')[0] == "GET" && args[0].Split(' ').Length == 2 || args[0] == "PUT" && args.Length == 3)
+            else if (args[0].Split(' ')[0] == "GET" && args[0].Split(' ')[1][0] == '/' || args[0].Split(' ')[0] == "PUT" && args[0].Split(' ')[1][0] == '/')
             {
                 m_Protocol = Protocol.HTTP9;
+                if (args[0].Split(' ')[0] == "GET")
+                {
+                    /*GET<space>/<name><CR><LF>*/
+                    m_Type = Type.lookup;
+                }
+                else {
+                    /*PUT<space>/<name><CR><LF>
+                      <CR><LF>
+                      <location><CR><LF>*/
+                    m_Type = Type.update;
+                }
             }
             else
             {

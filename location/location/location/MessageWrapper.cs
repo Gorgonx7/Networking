@@ -26,6 +26,10 @@ namespace location
         }
         private static void ChangeAddress(string pAddress)
         {
+            if(pAddress == "localhost")
+            {
+                m_Address = GetLocalIPAddress();
+            }
             m_Address = pAddress;
         }
         private static void WrapMessage( Message pMessage)
@@ -42,7 +46,8 @@ namespace location
 
             try
             {
-                sw.WriteLine(pMessage.ToString());
+                string holder = pMessage.ToString();              
+                sw.WriteLine(holder);
 
                 sw.Flush();
                 ReplyHandler reply = new ReplyHandler(sr, pMessage);
