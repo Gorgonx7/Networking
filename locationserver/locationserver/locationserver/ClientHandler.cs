@@ -100,7 +100,16 @@ namespace locationserver
         }
         private void Phase(string[] args)
         {
-            if (args[0].Split(' ').Contains("HTTP/1.0") && args[0].Split(' ').Length == 3)
+            string holderVersion = args[0];
+            string version = "";
+            try
+            {
+                version = holderVersion.Substring(holderVersion.Length - 9, 9).Trim();
+            }
+            catch {
+                version = "";
+            }
+            if (version == "HTTP/1.0")
             {
                 /*  GET<space>/?<name><space>HTTP/1.0<CR><LF>
                     <optional header lines><CR><LF>*/
@@ -118,19 +127,36 @@ namespace locationserver
                 {
                     case "POST":
                         m_Type = Type.update;
-                        m_Name = args[0].Split(' ')[1].Trim('/');
+                        
+                        for (int x = 6; x < args[0].Length; x++)
+                        {
+                            if (args[0][x] == 13)
+                            {
+                                break;
+                            }
+                            m_Name += args[0][x];
+                        }
+                        m_Name = m_Name.Substring(0, m_Name.Length - 9);
                         m_Location = args[3];
                         break;
                     case "GET":
                         m_Type = Type.lookup;
-                        m_Name = args[0].Split(' ')[1].Trim('/').Trim('?');
+                        for (int x = 6; x < args[0].Length; x++)
+                        {
+                            if (args[0][x] == 13)
+                            {
+                                break;
+                            }
+                            m_Name += args[0][x];
+                        }
+                        m_Name = m_Name.Substring(0, m_Name.Length - 9);
                         break;
                     default:
                         throw new Exception("Unexpected protocol message registered as 1.1");
 
                 }
             }
-            else if (args[0].Split(' ').Contains("HTTP/1.1") && args[0].Split(' ').Length == 3)
+            else if (version == "HTTP/1.1")
             {
 
                 m_Protocol = Protocol.HTTP11;
@@ -152,7 +178,18 @@ namespace locationserver
                 {
                     case "POST":
                         m_Type = Type.update;
-                        m_Name = args[4].Split('=')[1].Split('&')[0];
+                        int last = 0;
+                        string[] lastLocation = args[4].Split('=');
+                        for (int x = 0; x < lastLocation.Length; x++) {
+                            if (lastLocation[x].Substring(lastLocation[x].Length - 9, 9) == "&location")
+                            {
+                                last = x;
+                                // fix this
+                            }
+                        }
+                        for (int x = 5; x < args[4].Length) {
+
+                        }
                         m_Location = args[4].Split('=')[2];
                         break;
                     case "GET":
@@ -204,6 +241,12 @@ namespace locationserver
                       <location><CR><LF>*/
                     m_Type = Type.update;
                     m_Name = args[0].Split(' ')[1].Trim('/');
+                    for (int x = 5; x < args[0].Length; x++) {
+                        if (args[0][x] == 13) {
+                            break;
+                        }
+                        m_Name += args[0][x];
+                    }
                     m_Location = args[2];
                 }
             }

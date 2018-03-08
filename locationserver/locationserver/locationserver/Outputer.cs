@@ -59,7 +59,8 @@ namespace locationserver
             switch (pProtocol)
             {
                 case Protocol.WhoIs:
-                    pWriter.WriteLine(Program.m_Manager.GetLocation(pName));
+                    output = Program.m_Manager.GetLocation(pName);
+                    pWriter.WriteLine(output);
                    
                     break;
                 case Protocol.HTTP1:
