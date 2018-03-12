@@ -178,7 +178,7 @@ namespace locationserver
                 {
                     case "POST":
                         m_Type = Type.update;
-                        int last = 0;
+                       /* int last = 0;
                         string[] lastLocation = args[4].Split('=');
                         for (int x = 0; x < lastLocation.Length; x++) {
                             if (lastLocation[x].Substring(lastLocation[x].Length - 9, 9) == "&location")
@@ -186,11 +186,23 @@ namespace locationserver
                                 last = x;
                                 // fix this
                             }
-                        }
-                        for (int x = 5; x < args[4].Length) {
+                        }*/
+                        for (int x = 5; x < args[4].Length; x++) {
+                            if (args[4][x] == '&' && args[4][x+1] == 'l')
+                            {
+                                break;
+                            }
+                            else {
+                                m_Name += args[4][x];
+                            }
 
                         }
-                        m_Location = args[4].Split('=')[2];
+                        for (int x = 15 + m_Name.Length; x < args[4].Length; x++) {
+                            if (args[4][x] == 13) {
+                                break;
+                            }
+                            m_Location += args[4][x];
+                        }
                         break;
                     case "GET":
                         m_Type = Type.lookup;
@@ -240,7 +252,7 @@ namespace locationserver
                       <CR><LF>
                       <location><CR><LF>*/
                     m_Type = Type.update;
-                    m_Name = args[0].Split(' ')[1].Trim('/');
+                    m_Name = "";
                     for (int x = 5; x < args[0].Length; x++) {
                         if (args[0][x] == 13) {
                             break;

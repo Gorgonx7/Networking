@@ -7,57 +7,69 @@ using System.IO;
 
 namespace locationserver
 {
-    class ElementManager
+    class ElementManager : IDisposable
     {
-        private List<Element> m_Elements = new List<Element>();
+        private Dictionary<string, string> dictionary = new Dictionary<string, string>();
         public ElementManager() {
-            LoadElements(ref m_Elements);
+            LoadElements();
 
         }
         public string GetLocation(string pName) {
-            foreach (Element e in m_Elements) {
-                if (e.getName() == pName) {
-                    return e.getLocation();
-                }
+            string Output = "";
+            if (dictionary.TryGetValue(pName, out Output))
+            {
+                return Output;
             }
-            return "ERROR: no entries found";
+            else
+            {
+                return "ERROR: no entries found";
+            }
         }
 
         public bool UpdateLocation(string pName, string pLocation) {
-            foreach (Element e in m_Elements) {
-                if (e.getName() == pName) {
-                    return e.updateLocation(pLocation);
-                }
+
+            if (dictionary.ContainsKey(pName))
+            {
+                dictionary[pName] = pLocation;
             }
-            m_Elements.Add(new Element(pName, pLocation));
-            Console.WriteLine("Added New Entry: " + pName + " At " + pLocation);
+            else {
+                dictionary.Add(pName, pLocation);
+            }
+            Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
             return true;
         }
         public void SaveElements() {
-            StreamWriter sw = new StreamWriter("database.txt");
-            foreach (Element e in m_Elements) {
-                sw.WriteLine(e.ToString());
-            }
-            sw.Flush();
-            sw.Close();
-        }
-        private void LoadElements(ref List<Element> pElements) {
-            try
+            StreamWriter streamWriter = new StreamWriter(@"C:\Users\529548\dictionary.txt");
+            foreach (KeyValuePair<string, string> item in dictionary)
             {
-                StreamReader sr = new StreamReader("database.txt");
-                while (!sr.EndOfStream)
-                {
-                    string Element = sr.ReadLine();
-                    string[] SplitElement = Element.Split(',');
-                    pElements.Add(new Element(SplitElement[0], SplitElement[1]));
-                }
-                sr.Close();
+                 streamWriter.WriteLine( item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
             }
-            catch {
 
+            streamWriter.Flush();
+            streamWriter.Close();
+        }
+        private void LoadElements() {
+            StreamReader streamReader = new StreamReader(@"C:\Users\529548\dictionary.txt");
+            while (!streamReader.EndOfStream) {
+                string input = streamReader.ReadLine();
+                string key = "";
+                string value = "";
+                int keyLength = int.Parse(input.Split(' ')[0]);
+                for (int x = keyLength.ToString().Length + 1; x < keyLength; x++) {
+                    key += input[x];
+                }
+                // use the information above to find when the second part of the sequence starts
+                int valueLength = int.Parse(input.Substring(keyLength + keyLength.ToString().Length + 2).Split(' ')[0]);
+                value = input.Substring(keyLength + keyLength.ToString().Length + valueLength.ToString().Length + 3);
+                dictionary.Add(key, value);
             }
+            streamReader.Close();
         }
 
-
+        public void Dispose()
+        {
+            SaveElements();
+            
+        }
     }
 }

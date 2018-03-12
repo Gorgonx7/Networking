@@ -10,12 +10,12 @@ namespace location
     {
         public ReplyHandler(StreamReader sr, Message pMessage)
         {
-            
+            string holder = Readdata(sr).Trim('\0');
             if (pMessage.GetProtocol() == MessageProtocol.WhoIs)
             {
                 try
                 {
-                   string holder = Readdata(sr);
+                   
                     if (holder == "OK\r\n" && pMessage.getType() == MessageType.update)
                     {
                         Console.WriteLine(pMessage.GetName() + " location changed to be " + pMessage.GetLocation());
@@ -39,13 +39,12 @@ namespace location
             {
                 if (pMessage.getType() == MessageType.lookup)
                 {
-                    string holder = sr.ReadLine();
-                    holder = sr.ReadLine();
-                    if (!holder.Split(' ').Contains("404"))
+                    string LineHolder = holder.Split((char) 13)[0];
+                    if (!LineHolder.Split(' ').Contains("404"))
                     {
-                        holder = sr.ReadLine();
-                        holder = sr.ReadLine();
-                        Console.WriteLine(pMessage.GetName() + " is " + holder.TrimEnd());
+                        
+                        LineHolder = holder.Split((char)13)[4];
+                        Console.WriteLine(pMessage.GetName() + " is " + holder.Split((char)13)[3].TrimEnd().TrimStart());
                     }
                     else
                     {
@@ -80,7 +79,7 @@ namespace location
                     // End of stream? If so, we're done
                     if (nextByte == -1)
                     {
-                        return System.Text.Encoding.ASCII.GetString(buffer);
+                        return System.Text.Encoding.ASCII.GetString(buffer).TrimEnd('\0');
                     }
 
                     // Nope. Resize the buffer, put in the byte we've just
@@ -95,6 +94,7 @@ namespace location
             // Buffer is now too big. Shrink it.
             byte[] ret = new byte[read];
             Array.Copy(buffer, ret, read);
+            System.Threading.Thread.Sleep(1000);
             return System.Text.Encoding.ASCII.GetString(buffer);
 
         }
