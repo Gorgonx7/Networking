@@ -76,7 +76,25 @@ namespace locationserver
                 }
 
 
-                Phase(dataFromClient);
+                if (!Phase(dataFromClient))
+                {
+                    m_Protocol = Protocol.WhoIs;
+                    if (dataFromClient[0].Split(' ').Length >= 2)
+                    {
+                        m_Type = Type.update;
+                        m_Name = dataFromClient[0].Split(' ')[0];
+                        for (int x = 1; x < dataFromClient[0].Split(' ').Length; x++)
+                        {
+                            m_Location = m_Location + " " + dataFromClient[0].Split(' ')[x];
+                        }
+                        m_Location = m_Location.TrimStart();
+                    }
+                    else
+                    {
+                        m_Type = Type.lookup;
+                        m_Name = dataFromClient[0];
+                    }
+                }
                 switch (m_Type)
                 {
                     case Type.lookup:
@@ -98,7 +116,7 @@ namespace locationserver
             }
 
         }
-        private void Phase(string[] args)
+        private bool Phase(string[] args)
         {
             string holderVersion = args[0];
             string version = "";
@@ -273,30 +291,14 @@ namespace locationserver
                 }
                 catch
                 {
-                    goto tests;
+                    return false;
                 }
-                m_Protocol = Protocol.WhoIs;
-                if (args[0].Split(' ').Length >= 2)
-                {
-                    m_Type = Type.update;
-                    m_Name = args[0].Split(' ')[0];
-                    for(int x = 1; x < args[0].Split(' ').Length; x++)
-                    {
-                        m_Location = m_Location + " " + args[0].Split(' ')[x];
-                    }
-                    m_Location = m_Location.TrimStart();
-                }
-                else
-                {
-                    m_Type = Type.lookup;
-                    m_Name = args[0];
-                }
+                
+                
             }
+            return true;
         }
-        private void whois() {
-            tests:
-
-        }
+       
     }
     
 }
