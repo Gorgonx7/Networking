@@ -226,44 +226,55 @@ namespace locationserver
                 }
                 
             }
-            else if (args[0].Split(' ')[0] == "GET" && args[0].Split(' ')[1][0] == '/' || args[0].Split(' ')[0] == "PUT" && args[0].Split(' ')[1][0] == '/')
+            else
             {
-                m_Protocol = Protocol.HTTP9;
-                if (args[0].Split(' ')[0] == "GET")
+                try
                 {
-                    /*GET<space>/<name><CR><LF>*/
-                    m_Type = Type.lookup;
-                    string Holder = "";
-                    for (int index = 5; index < args[0].Length; index++)
+                    if (args[0].Split(' ')[0] == "GET" && args[0].Split(' ')[1][0] == '/' || args[0].Split(' ')[0] == "PUT" && args[0].Split(' ')[1][0] == '/')
                     {
-                        if ((int)args[0][index] == 13)
+                        m_Protocol = Protocol.HTTP9;
+                        if (args[0].Split(' ')[0] == "GET")
                         {
-                            break;
+                            /*GET<space>/<name><CR><LF>*/
+                            m_Type = Type.lookup;
+                            string Holder = "";
+                            for (int index = 5; index < args[0].Length; index++)
+                            {
+                                if ((int)args[0][index] == 13)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    Holder += args[0][index];
+                                }
+                            }
+                            m_Name = Holder;
                         }
                         else
                         {
-                            Holder += args[0][index];
+                            /*PUT<space>/<name><CR><LF>
+                              <CR><LF>
+                              <location><CR><LF>*/
+                            m_Type = Type.update;
+                            m_Name = "";
+                            for (int x = 5; x < args[0].Length; x++)
+                            {
+                                if (args[0][x] == 13)
+                                {
+                                    break;
+                                }
+                                m_Name += args[0][x];
+                            }
+                            m_Location = args[2];
                         }
+
                     }
-                    m_Name = Holder;
                 }
-                else {
-                    /*PUT<space>/<name><CR><LF>
-                      <CR><LF>
-                      <location><CR><LF>*/
-                    m_Type = Type.update;
-                    m_Name = "";
-                    for (int x = 5; x < args[0].Length; x++) {
-                        if (args[0][x] == 13) {
-                            break;
-                        }
-                        m_Name += args[0][x];
-                    }
-                    m_Location = args[2];
+                catch
+                {
+                    goto tests;
                 }
-            }
-            else
-            {
                 m_Protocol = Protocol.WhoIs;
                 if (args[0].Split(' ').Length >= 2)
                 {
@@ -282,7 +293,11 @@ namespace locationserver
                 }
             }
         }
-    }
+        private void whois() {
+            tests:
 
+        }
+    }
+    
 }
 

@@ -12,6 +12,7 @@ namespace location
 
     static class MessageWrapper
     {
+        
         static int m_Port = 43;
         static string m_Address = GetLocalIPAddress();
         public static void SendMessage(Message message)

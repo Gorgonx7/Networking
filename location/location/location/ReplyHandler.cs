@@ -10,6 +10,7 @@ namespace location
     {
         public ReplyHandler(StreamReader sr, Message pMessage)
         {
+            System.Threading.Thread.Sleep(75);
             string holder = Readdata(sr).Trim('\0');
             if (pMessage.GetProtocol() == MessageProtocol.WhoIs)
             {
@@ -94,7 +95,7 @@ namespace location
             // Buffer is now too big. Shrink it.
             byte[] ret = new byte[read];
             Array.Copy(buffer, ret, read);
-            System.Threading.Thread.Sleep(1000);
+            
             return System.Text.Encoding.ASCII.GetString(buffer);
 
         }
