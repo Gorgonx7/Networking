@@ -17,7 +17,7 @@ namespace locationserver
         {
             TcpListener m_Listener;
             Socket m_Connection;
-
+           
             try
             {
                 m_Listener = new TcpListener(IPAddress.Any, 43);

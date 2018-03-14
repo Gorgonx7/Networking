@@ -39,7 +39,7 @@ namespace locationserver
             return true;
         }
         public void SaveElements() {
-            StreamWriter streamWriter = new StreamWriter(@"C:\Users\529548\dictionary.txt");
+            StreamWriter streamWriter = new StreamWriter(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\dictionary.txt");
             foreach (KeyValuePair<string, string> item in dictionary)
             {
                  streamWriter.WriteLine( item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
@@ -49,7 +49,7 @@ namespace locationserver
             streamWriter.Close();
         }
         private void LoadElements() {
-            StreamReader streamReader = new StreamReader(@"C:\Users\529548\dictionary.txt");
+            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\dictionary.txt");
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
                 string key = "";
