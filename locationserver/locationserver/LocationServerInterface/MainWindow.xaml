@@ -12,9 +12,9 @@
         <Button Content="Open Log" HorizontalAlignment="Left" Margin="432,283,0,0" VerticalAlignment="Top" Width="75" Click="Openlog_Click"/>
         <Image x:Name="StatusImage_RedCross" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Red_X.png" Visibility="Visible"/>
         <Button x:Name="startstopbutton" Content="Start" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top" Width="75" Click="Start_Click"/>
-        <TextBox HorizontalAlignment="Left" Height="25" Margin="104,281,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="30"/>
+        <TextBox x:Name="Port" HorizontalAlignment="Left" Height="25" Margin="104,281,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="30"/>
         <Label Content="Port" HorizontalAlignment="Left" Margin="142,279,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Debug" HorizontalAlignment="Left" Margin="354,286,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="Debug" Content="Debug" HorizontalAlignment="Left" Margin="354,286,0,0" VerticalAlignment="Top"/>
         <Image x:Name="StatusImage_GreenTick" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Green_Tick.jpg" Visibility="Hidden"/>
 
     </Grid>

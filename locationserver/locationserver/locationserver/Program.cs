@@ -9,22 +9,43 @@ using System.IO;
 using System.Threading;
 namespace locationserver
 {
-    class Program
+    public class Program
     {
         public static ElementManager m_Manager = new ElementManager();
         private static TcpListener m_Listener;
-        private static int m_Port;
+        private static int m_Port = 43;
+        public static bool m_Debug = false;
+        private static Socket m_Connection;
         public static void createTCPListener() {
-            m_Listener = new TcpListener(IPAddress.Any,)
+            m_Listener = new TcpListener(IPAddress.Any, m_Port);
         }
-        static void Main(string[] args)
+        public static void setPort(int port) {
+            m_Port = port;
+        }
+        public static bool CloseConnection() {
+            try
+            {
+               
+                m_Connection.Close();
+                m_Listener.Stop();
+                return true;
+            }
+            catch {
+                return false;
+            }
+        }
+        public static void Main(string[] args)
         {
+            foreach (string i in args) {
+                if(i == "-d") {
+                    m_Debug = true;
+                }
+            }
             
-            Socket m_Connection;
            
             try
             {
-                m_Listener = new TcpListener(IPAddress.Any, 43);
+                
                 m_Listener.Start();
                 Console.WriteLine(">> " + "Server Started");
                 int counter = 0;

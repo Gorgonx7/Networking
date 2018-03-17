@@ -7,7 +7,7 @@ using System.IO;
 
 namespace locationserver
 {
-    class ElementManager : IDisposable
+    public class ElementManager : IDisposable
     {
         private Dictionary<string, string> dictionary = new Dictionary<string, string>();
         public ElementManager() {

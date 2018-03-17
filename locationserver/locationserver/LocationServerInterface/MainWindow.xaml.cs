@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using locationserver;
 namespace LocationServerInterface
 {
     /// <summary>
@@ -22,6 +23,7 @@ namespace LocationServerInterface
     {
         Log LogWindow = new Log();
         bool LogIsOpen = false;
+        Thread thread;
         public MainWindow()
         {
             
@@ -31,6 +33,27 @@ namespace LocationServerInterface
             if ((string)startstopbutton.Content == "Start")
             {
                 // start the server
+                int PortNumber = 43;
+                try
+                {
+                    PortNumber = int.Parse(Port.Text);
+                    Port.IsEnabled = false;
+                }
+                catch {
+                    MessageBox.Show("The port but be a valid whole number");
+                    return;
+                }
+                Program.setPort(PortNumber);
+                Program.createTCPListener();
+                string[] args = new string[1];
+                if ((bool)Debug.IsChecked)
+                {
+                    args[0] = "-d";
+                }
+                Debug.IsEnabled = false;
+                thread = new Thread(()=>Program.Main(args));
+                thread.Start();
+                
                 StatusImage_GreenTick.Visibility = Visibility.Visible;
                 StatusImage_RedCross.Visibility = Visibility.Hidden;
                 startstopbutton.Content = "Stop";
@@ -38,6 +61,10 @@ namespace LocationServerInterface
             else
             {
                 // stop the server
+                Port.IsEnabled = true;
+                Debug.IsEnabled = true;
+                Program.CloseConnection();
+                thread.Abort();
                 StatusImage_GreenTick.Visibility = Visibility.Hidden;
                 StatusImage_RedCross.Visibility = Visibility.Visible;
                 startstopbutton.Content = "Start";
