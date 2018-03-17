@@ -5,14 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationServerInterface"
         mc:Ignorable="d"
-        Title="locationserver" Height="350" Width="525">
+        Title="locationserver" Height="350" Width="525"
+        Closing="Window_Closing">
+    
     <Grid>
-        <Button Content="Open Log" HorizontalAlignment="Left" Margin="432,289,0,0" VerticalAlignment="Top" Width="75"/>
-        <Image HorizontalAlignment="Left" Height="100" Margin="10,209,0,0" VerticalAlignment="Top" Width="100" Source="Red_X.png"/>
-        <Button Content="Start" HorizontalAlignment="Left" Margin="120,289,0,0" VerticalAlignment="Top" Width="75"/>
-        <TextBox HorizontalAlignment="Left" Height="25" Margin="10,160,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="30"/>
-        <Label Content="Port" HorizontalAlignment="Left" Margin="42,158,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="Debug" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top"/>
+        <Button Content="Open Log" HorizontalAlignment="Left" Margin="432,283,0,0" VerticalAlignment="Top" Width="75" Click="Openlog_Click"/>
+        <Image x:Name="StatusImage_RedCross" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Red_X.png" Visibility="Visible"/>
+        <Button x:Name="startstopbutton" Content="Start" HorizontalAlignment="Left" Margin="10,283,0,0" VerticalAlignment="Top" Width="75" Click="Start_Click"/>
+        <TextBox HorizontalAlignment="Left" Height="25" Margin="104,281,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="30"/>
+        <Label Content="Port" HorizontalAlignment="Left" Margin="142,279,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="Debug" HorizontalAlignment="Left" Margin="354,286,0,0" VerticalAlignment="Top"/>
+        <Image x:Name="StatusImage_GreenTick" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Green_Tick.jpg" Visibility="Hidden"/>
 
     </Grid>
 </Window>

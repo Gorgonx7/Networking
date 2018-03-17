@@ -110,5 +110,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\locationserver\locationserver.csproj">
+      <Project>{b549a807-c5b2-4c3e-a350-9af1d3bb982e}</Project>
+      <Name>locationserver</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
