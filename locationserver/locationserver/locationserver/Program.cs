@@ -12,10 +12,14 @@ namespace locationserver
     class Program
     {
         public static ElementManager m_Manager = new ElementManager();
-
+        private static TcpListener m_Listener;
+        private static int m_Port;
+        public static void createTCPListener() {
+            m_Listener = new TcpListener(IPAddress.Any,)
+        }
         static void Main(string[] args)
         {
-            TcpListener m_Listener;
+            
             Socket m_Connection;
            
             try
