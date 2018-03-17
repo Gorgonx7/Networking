@@ -14,20 +14,27 @@
                         <ColumnDefinition Width="83*"/>
 
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="Use Localhost" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="10,24,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="491" Grid.ColumnSpan="2"/>
+                    <CheckBox Content="Use Localhost" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" x:Name="UseLocalhost" Checked="UseLocalhost_Checked" Unchecked="UseLocalhost_Checked"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="10,24,0,0" TextWrapping="Wrap" Text="whois.net.dcs.hull.ac.uk" VerticalAlignment="Top" Width="491" Grid.ColumnSpan="2" x:Name="Hostname"/>
                     <Label Content="Hostname" HorizontalAlignment="Left" Margin="6,0,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="22" Margin="10,104,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="491"/>
-                    <TextBox HorizontalAlignment="Left" Height="22" Margin="10,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="491"/>
+                    <TextBox x:Name="Username" HorizontalAlignment="Left" Height="22" Margin="10,104,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="491"/>
+                    <TextBox x:Name="LocationBox" HorizontalAlignment="Left" Height="22" Margin="10,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="491" IsEnabled="False"/>
                     <Label Content="Username" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top"/>
                     <Label Content="Location" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
-                    <ComboBox HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Width="120"/>
+                    <ComboBox x:Name="Protocol" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
+                        <ComboBoxItem Content="Whois"></ComboBoxItem>
+                        <ComboBoxItem Content="HTTP/0.9"></ComboBoxItem>
+                        <ComboBoxItem Content="HTTP/1.0"></ComboBoxItem>
+                        <ComboBoxItem Content="HTTP/1.1"></ComboBoxItem>
+                    </ComboBox>
                     <Label Content="Protocol" HorizontalAlignment="Left" Margin="133,183,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="208,187,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="24"/>
+                    <TextBox x:Name="Port" HorizontalAlignment="Left" Height="23" Margin="208,187,0,0" TextWrapping="Wrap" Text="43" VerticalAlignment="Top" Width="24"/>
                     <Label Content="Port" HorizontalAlignment="Left" Margin="231,185,0,0" VerticalAlignment="Top"/>
-                    <CheckBox Content="Debug" HorizontalAlignment="Left" Margin="270,189,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="24" Margin="10,218,0,0" TextWrapping="Wrap" Text="1000" VerticalAlignment="Top" Width="120"/>
+                    <CheckBox x:Name="isDebug" Content="Debug" HorizontalAlignment="Left" Margin="270,189,0,0" VerticalAlignment="Top" Checked="isDebug_Checked" Unchecked="isDebug_Checked"/>
+                    <TextBox x:Name="TimeoutTextBox" HorizontalAlignment="Left" Height="24" Margin="10,218,0,0" TextWrapping="Wrap" Text="1000" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Timeout" HorizontalAlignment="Left" Margin="130,218,0,0" VerticalAlignment="Top"/>
+                    <Button Content="Send" HorizontalAlignment="Left" Margin="427,261,0,0" VerticalAlignment="Top" Width="74" Click="Button_Click"/>
+                    <CheckBox x:Name="IsUpdate" Content="Update" HorizontalAlignment="Left" Margin="342,189,0,0" VerticalAlignment="Top" Checked="IsUpdate_Checked" Unchecked="IsUpdate_Checked"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Help">

@@ -15,11 +15,11 @@ namespace location
         
         static int m_Port = 43;
         static string m_Address = GetLocalIPAddress();
-        public static void SendMessage(Message message)
+        public static string SendMessage(Message message)
         {
             ChangePort(message.GetPort());
             ChangeAddress(message.GetAddress());
-            WrapMessage(message);
+            return WrapMessage(message);
         }
         private static void ChangePort(int pPort)
         {
@@ -33,10 +33,17 @@ namespace location
             }
             m_Address = pAddress;
         }
-        private static void WrapMessage( Message pMessage)
+        private static string WrapMessage( Message pMessage)
         {
             TcpClient client = new TcpClient();
-            client.Connect(m_Address, m_Port);
+            try
+            {
+                client.Connect(m_Address, m_Port);
+            }
+            catch {
+                return "Failed to connect to server";
+                
+            }
             if (pMessage.GetTimeout() != 0)
             {
                 client.GetStream().ReadTimeout = pMessage.GetTimeout();
@@ -52,12 +59,13 @@ namespace location
 
                 sw.Flush();
                 ReplyHandler reply = new ReplyHandler(sr, pMessage);
-
+                return reply.GetReply();
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return e.Message;
             }
             finally {
                 sw.Dispose();

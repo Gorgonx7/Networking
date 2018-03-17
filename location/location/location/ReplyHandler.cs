@@ -8,10 +8,15 @@ namespace location
 {
     class ReplyHandler
     {
+        string reply = "";
         public ReplyHandler(StreamReader sr, Message pMessage)
         {
             System.Threading.Thread.Sleep(75);
             string holder = Readdata(sr).Trim('\0');
+            if (pMessage.GetDebug()) {
+                Console.WriteLine(holder);
+                Console.WriteLine("----------------------------------------------------------------------------------");
+            }
             if (pMessage.GetProtocol() == MessageProtocol.WhoIs)
             {
                 try
@@ -19,15 +24,17 @@ namespace location
                    
                     if (holder == "OK\r\n" && pMessage.getType() == MessageType.update)
                     {
-                        Console.WriteLine(pMessage.GetName() + " location changed to be " + pMessage.GetLocation());
+                        reply = pMessage.GetName() + " location changed to be " + pMessage.GetLocation();
+                        Console.WriteLine(reply);
                     }
                     else if (holder != "ERROR: no entries found\r\n")
                     {
-                        Console.WriteLine(pMessage.GetName() + " is " + holder.TrimEnd());
+                        reply = pMessage.GetName() + " is " + holder.TrimEnd();
+                        Console.WriteLine(reply);
                     }
                     else
                     {
-
+                        reply = holder;
                         Console.WriteLine(holder);
                     }
                 }
@@ -45,21 +52,27 @@ namespace location
                     {
                         
                         LineHolder = holder.Split((char)13)[4];
-                        Console.WriteLine(pMessage.GetName() + " is " + holder.Split((char)13)[3].TrimEnd().TrimStart());
+                        reply = pMessage.GetName() + " is " + holder.Split((char)13)[3].TrimEnd().TrimStart();
+                        Console.WriteLine(reply);
                     }
                     else
                     {
-                        Console.Write("ERROR: no entries found\r\n");
+                        reply = "ERROR: no entries found\r\n";
+                        Console.Write(reply);
                     }
                 }
                 else
                 {
-                    Console.WriteLine(pMessage.GetName() + " location changed to be " + pMessage.GetLocation());
+                    reply = pMessage.GetName() + " location changed to be " + pMessage.GetLocation();
+                    Console.WriteLine(reply);
                 }
             }
 
 
 
+        }
+        public string GetReply() {
+            return reply;
         }
         private string Readdata(StreamReader sr) {
             Stream stream = sr.BaseStream;

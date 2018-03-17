@@ -10,13 +10,12 @@ using System.Net.Sockets;
 using System.Net;
 namespace location
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-
-            Message message = new Message(args);
-            MessageWrapper.SendMessage(message);
+            start(args);
+            
 
 
            /* try
@@ -67,6 +66,64 @@ namespace location
             }
             */
 
+        }
+        public static string start(string[] args)
+        {
+            Message message = new Message(args);
+            return MessageWrapper.SendMessage(message);
+        }
+        public static string WPFInitialise(string name, string location, string address, int port, int timeout, MessageProtocol protocol, bool debug) {
+            string args = "";
+            args += name + " ";
+            args += location + " ";
+            args += "-h " + address + " ";
+            args += "-p " + port + " ";
+            args += "-t " + timeout + " ";
+            switch (protocol) {
+                case MessageProtocol.WhoIs:
+                    
+                    break;
+                case MessageProtocol.HTTP1:
+                    args += "-h0 ";
+                    break;
+                case MessageProtocol.HTTP9:
+                    args += "-h9 ";
+                    break;
+                case MessageProtocol.HTTP11:
+                    args += "-h1 ";
+                    break;
+            }
+            args += "-d";
+            if (debug) {
+                Console.WriteLine(args);
+            }
+            return start(args.Trim().Split(' '));
+            
+        }
+        public static string WPFInitialise(string name, string address, int port, int timeout, MessageProtocol protocol, bool debug) {
+            string args = "";
+            args += name + " ";
+            args += "-h " + address + " ";
+            args += "-p " + port + " ";
+            args += "-t " + timeout + " ";
+            switch (protocol)
+            {
+                case MessageProtocol.WhoIs:
+
+                    break;
+                case MessageProtocol.HTTP1:
+                    args += "-h0 ";
+                    break;
+                case MessageProtocol.HTTP9:
+                    args += "-h9 ";
+                    break;
+                case MessageProtocol.HTTP11:
+                    args += "-h1 ";
+                    break;
+            }
+            args += "-d";
+
+            return start(args.Trim().Split(' '));
         }
     }
 }

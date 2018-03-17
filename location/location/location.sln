@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "location", "location\location.csproj", "{F20C1C12-ADF2-4792-B566-83C7738A4531}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "locationconsole", "location\locationconsole.csproj", "{F20C1C12-ADF2-4792-B566-83C7738A4531}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "locationInterface", "locationInterface\locationInterface.csproj", "{EEEAACAA-1A00-49CF-B2A0-6BF5D41EFE7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "location", "locationInterface\location.csproj", "{EEEAACAA-1A00-49CF-B2A0-6BF5D41EFE7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace location
 {
-    enum MessageProtocol { HTTP9, HTTP1, HTTP11, WhoIs }
+    public enum MessageProtocol { HTTP9, HTTP1, HTTP11, WhoIs }
     enum MessageType { lookup, update }
 
     class Message
@@ -23,7 +23,9 @@ namespace location
         public Message(string[] args)
         {
             CheckProtocols(args);
-
+            if (m_Debug) {
+                Console.WriteLine("Message string: " + ToString());
+            }
         }
         public MessageType getType() {
             return m_Type;
@@ -46,6 +48,10 @@ namespace location
         public string GetAddress()
         {
             return m_HostName;
+        }
+        public bool GetDebug()
+        {
+            return m_Debug;
         }
         private void CheckProtocols(string[] args)
         {
