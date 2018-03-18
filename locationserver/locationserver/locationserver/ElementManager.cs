@@ -7,7 +7,7 @@ using System.IO;
 
 namespace locationserver
 {
-    public class ElementManager : IDisposable
+    public class ElementManager
     {
         private Dictionary<string, string> dictionary = new Dictionary<string, string>();
         public ElementManager() {
@@ -38,8 +38,8 @@ namespace locationserver
             Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
             return true;
         }
-        public void SaveElements() {
-            StreamWriter streamWriter = new StreamWriter(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\dictionary.txt");
+        public void SaveElements(bool sig, string Path) {
+            StreamWriter streamWriter = new StreamWriter(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
             foreach (KeyValuePair<string, string> item in dictionary)
             {
                  streamWriter.WriteLine( item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
@@ -48,8 +48,18 @@ namespace locationserver
             streamWriter.Flush();
             streamWriter.Close();
         }
+        public void SaveElements(string Path) {
+            StreamWriter streamWriter = new StreamWriter(Path);
+            foreach (KeyValuePair<string, string> item in dictionary)
+            {
+                streamWriter.WriteLine(item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
+            }
+
+            streamWriter.Flush();
+            streamWriter.Close();
+        }
         private void LoadElements() {
-            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\dictionary.txt");
+            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + @"dictionary.txt");
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
                 string key = "";
@@ -65,11 +75,9 @@ namespace locationserver
             }
             streamReader.Close();
         }
-
-        public void Dispose()
-        {
-            SaveElements();
-            
+        public Dictionary<string, string> GetDictionary() {
+            return dictionary;
         }
+        
     }
 }

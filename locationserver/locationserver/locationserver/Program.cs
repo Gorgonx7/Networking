@@ -19,7 +19,7 @@ namespace locationserver
         public static void createTCPListener() {
             m_Listener = new TcpListener(IPAddress.Any, m_Port);
         }
-        public static void setPort(int port) {
+        public static void SetPort(int port) {
             m_Port = port;
         }
         public static bool CloseConnection() {
@@ -36,9 +36,14 @@ namespace locationserver
         }
         public static void Main(string[] args)
         {
-            foreach (string i in args) {
-                if(i == "-d") {
+            for (int x = 0; x < args.Length; x++) {
+                if(args[x] == "-d") {
                     m_Debug = true;
+                }
+                if (args[x] == "-p") {
+                    m_Port = int.Parse(args[x + 1]);
+                    x++;
+                    createTCPListener();
                 }
             }
             

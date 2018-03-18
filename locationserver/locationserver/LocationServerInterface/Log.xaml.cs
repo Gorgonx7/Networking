@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+using locationserver;
 namespace LocationServerInterface
 {
     /// <summary>
@@ -22,6 +22,13 @@ namespace LocationServerInterface
         public Log()
         {
             InitializeComponent();
+            LogBox.ItemsSource = Program.m_Manager.GetDictionary();
+            
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MainWindow.LogIsOpen = false;
         }
     }
 }

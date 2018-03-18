@@ -22,7 +22,7 @@ namespace LocationServerInterface
     public partial class MainWindow : Window
     {
         Log LogWindow = new Log();
-        bool LogIsOpen = false;
+        public static bool LogIsOpen = false;
         Thread thread;
         public MainWindow()
         {
@@ -43,7 +43,7 @@ namespace LocationServerInterface
                     MessageBox.Show("The port but be a valid whole number");
                     return;
                 }
-                Program.setPort(PortNumber);
+                Program.SetPort(PortNumber);
                 Program.createTCPListener();
                 string[] args = new string[1];
                 if ((bool)Debug.IsChecked)
@@ -53,7 +53,7 @@ namespace LocationServerInterface
                 Debug.IsEnabled = false;
                 thread = new Thread(()=>Program.Main(args));
                 thread.Start();
-                
+                StatusLable.Content = "The server is running";
                 StatusImage_GreenTick.Visibility = Visibility.Visible;
                 StatusImage_RedCross.Visibility = Visibility.Hidden;
                 startstopbutton.Content = "Stop";
@@ -65,6 +65,7 @@ namespace LocationServerInterface
                 Debug.IsEnabled = true;
                 Program.CloseConnection();
                 thread.Abort();
+                StatusLable.Content = "The server is not running";
                 StatusImage_GreenTick.Visibility = Visibility.Hidden;
                 StatusImage_RedCross.Visibility = Visibility.Visible;
                 startstopbutton.Content = "Start";
@@ -74,8 +75,17 @@ namespace LocationServerInterface
         {
             if (!LogIsOpen)
             {
-                LogWindow.Activate();
-                LogWindow.Show();
+                try
+                {
+                    LogWindow.Activate();
+                    LogWindow.Show();
+                }
+                catch
+                {
+                    LogWindow = new Log();
+                    LogWindow.Activate();
+                    LogWindow.Show();
+                }
                 LogIsOpen = true;
             }
             else {
@@ -87,6 +97,43 @@ namespace LocationServerInterface
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LogWindow.Close();
+            if (PathBox.IsEnabled) {
+                if ((bool)SpecialDirectory.IsChecked)
+                {
+                    try
+                    {
+                        locationserver.Program.m_Manager.SaveElements(PathBox.Text);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Failed to find custom directory specified \n Have you defined it correctly?");
+                    }
+                }
+                else {
+                    try
+                    {
+                        Program.m_Manager.SaveElements(true, PathBox.Text);
+                    }
+                    catch(Exception a)
+                    {
+                        MessageBox.Show("An unknown error occoured during file saving \n" + a.Message);
+                    }
+                }
+            }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!PathBox.IsEnabled)
+            {
+                PathBox.IsEnabled = true;
+                SpecialDirectory.IsEnabled = true;
+            }
+            else {
+                PathBox.IsEnabled = false;
+                SpecialDirectory.IsEnabled = false;
+                SpecialDirectory.IsChecked = false;
+            }
         }
     }
 }

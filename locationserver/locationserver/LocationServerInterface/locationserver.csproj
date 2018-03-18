@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="App.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -111,9 +112,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\locationserver\locationserver.csproj">
+    <ProjectReference Include="..\locationserver\locationserverConsole.csproj">
       <Project>{b549a807-c5b2-4c3e-a350-9af1d3bb982e}</Project>
-      <Name>locationserver</Name>
+      <Name>locationserverConsole</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

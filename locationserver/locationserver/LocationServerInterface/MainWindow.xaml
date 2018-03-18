@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="locationserver" Height="350" Width="525"
         Closing="Window_Closing">
-    
+
     <Grid>
         <Button Content="Open Log" HorizontalAlignment="Left" Margin="432,283,0,0" VerticalAlignment="Top" Width="75" Click="Openlog_Click"/>
         <Image x:Name="StatusImage_RedCross" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Red_X.png" Visibility="Visible"/>
@@ -16,6 +16,11 @@
         <Label Content="Port" HorizontalAlignment="Left" Margin="142,279,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="Debug" Content="Debug" HorizontalAlignment="Left" Margin="354,286,0,0" VerticalAlignment="Top"/>
         <Image x:Name="StatusImage_GreenTick" HorizontalAlignment="Left" Height="100" Margin="204,85,0,0" VerticalAlignment="Top" Width="100" Source="Green_Tick.jpg" Visibility="Hidden"/>
+        <Label x:Name="StatusLable" Content="The server is not running" HorizontalAlignment="Left" Margin="151,190,0,0" VerticalAlignment="Top" Width="208" Height="50" FontSize="18"/>
+        <CheckBox Content="Save database to file" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
+        <TextBox x:Name="PathBox" HorizontalAlignment="Left" Height="24" Margin="10,30,0,0" TextWrapping="Wrap" Text="dictionary.txt" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <Label  Content="Path of save file" HorizontalAlignment="Left" Margin="132,26,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="SpecialDirectory" Content="Custom Full Directory e.g C://directory" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" IsEnabled="False"/>
 
     </Grid>
 </Window>
