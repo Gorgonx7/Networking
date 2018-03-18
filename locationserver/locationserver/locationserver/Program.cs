@@ -16,6 +16,7 @@ namespace locationserver
         private static int m_Port = 43;
         public static bool m_Debug = false;
         private static Socket m_Connection;
+        
         public static void createTCPListener() {
             m_Listener = new TcpListener(IPAddress.Any, m_Port);
         }
@@ -39,18 +40,33 @@ namespace locationserver
             for (int x = 0; x < args.Length; x++) {
                 if(args[x] == "-d") {
                     m_Debug = true;
+                    Console.WriteLine("Started in Debug Mode");
                 }
                 if (args[x] == "-p") {
-                    m_Port = int.Parse(args[x + 1]);
+                    try
+                    {
+                        m_Port = int.Parse(args[x + 1]);
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        throw e;
+                    }
                     x++;
+                    Console.WriteLine("Opening on port " + m_Port);
                     createTCPListener();
+                }
+                if (args[x] == "-l") {
+
                 }
             }
             
            
             try
             {
-                
+                if (m_Listener == null) {
+                    createTCPListener();
+                }
                 m_Listener.Start();
                 Console.WriteLine(">> " + "Server Started");
                 int counter = 0;

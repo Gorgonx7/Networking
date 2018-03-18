@@ -30,5 +30,10 @@ namespace LocationServerInterface
         {
             MainWindow.LogIsOpen = false;
         }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            LogBox.ItemsSource = Program.m_Manager.GetDictionary();
+        }
     }
 }

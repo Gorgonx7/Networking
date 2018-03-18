@@ -85,7 +85,7 @@ namespace locationInterface
             }
             else
             {
-               MessageBox.Show(location.Program.WPFInitialise(Username.Text, LocationBox.Text, Hostname.Text, Portnumb, Timeout, messageProtocol, (bool)isDebug.IsChecked));
+               MessageBox.Show(location.Program.WPFInitialise(Username.Text, LocationBox.Text, hostname, Portnumb, Timeout, messageProtocol, (bool)isDebug.IsChecked));
 
             }
 

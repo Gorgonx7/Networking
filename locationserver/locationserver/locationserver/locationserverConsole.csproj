@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B549A807-C5B2-4C3E-A350-9AF1D3BB982E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>locationserver</RootNamespace>
-    <AssemblyName>locationserver</AssemblyName>
+    <RootNamespace>locationserverConsole</RootNamespace>
+    <AssemblyName>locationserverConsole</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ClientHandler.cs" />
     <Compile Include="ElementManager.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Outputer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dictionary.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

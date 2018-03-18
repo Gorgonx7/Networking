@@ -288,6 +288,9 @@ namespace locationserver
                         }
 
                     }
+                    else {
+                        return false;
+                    }
                 }
                 catch
                 {

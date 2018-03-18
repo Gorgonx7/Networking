@@ -64,8 +64,8 @@ namespace locationserver
                 string input = streamReader.ReadLine();
                 string key = "";
                 string value = "";
-                int keyLength = int.Parse(input.Split(' ')[0]);
-                for (int x = keyLength.ToString().Length + 1; x < keyLength; x++) {
+                int keyLength = int.Parse(input.Trim().Split(' ')[0]);
+                for (int x = keyLength.ToString().Length + 1; x < keyLength + keyLength.ToString().Length + 1; x++) {
                     key += input[x];
                 }
                 // use the information above to find when the second part of the sequence starts

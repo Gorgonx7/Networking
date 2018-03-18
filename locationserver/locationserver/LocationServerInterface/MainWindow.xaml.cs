@@ -97,6 +97,13 @@ namespace LocationServerInterface
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LogWindow.Close();
+            
+            if (thread != null)
+            {
+
+                thread.Abort();
+            }
+            
             if (PathBox.IsEnabled) {
                 if ((bool)SpecialDirectory.IsChecked)
                 {
