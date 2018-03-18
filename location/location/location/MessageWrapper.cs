@@ -58,6 +58,7 @@ namespace location
                 sw.WriteLine(holder);
 
                 sw.Flush();
+                System.Threading.Thread.Sleep(75);
                 ReplyHandler reply = new ReplyHandler(sr, pMessage);
                 return reply.GetReply();
 

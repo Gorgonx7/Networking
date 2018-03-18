@@ -84,7 +84,10 @@ namespace location
                             m_Debug = true;
                             break;
                         case "-h":
-                            m_HostName = args[x + 1];
+                            
+                            
+                                m_HostName = args[x + 1];
+                            
                             
                             x += 1;
                             break;
@@ -176,6 +179,9 @@ namespace location
                     }
                     else
                     {
+                        if (m_Location[0] == '/') {
+                            m_Location = "\t" + m_Location;
+                        }
                         Output = m_Username + " " + m_Location;
                     }
                     break;

@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using locationserver;
+using locationserverConsole;
 namespace LocationServerInterface
 {
     /// <summary>
@@ -109,7 +109,7 @@ namespace LocationServerInterface
                 {
                     try
                     {
-                        locationserver.Program.m_Manager.SaveElements(PathBox.Text);
+                        locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
                     }
                     catch
                     {

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-namespace locationserver
+using System.Net.Sockets;
+
+namespace locationserverConsole
 {
     public enum Type { update, lookup }
     public enum Protocol { HTTP1, HTTP11, HTTP9, WhoIs }
@@ -14,7 +16,7 @@ namespace locationserver
         
        
 
-        public static void Update(StreamWriter pWriter, Protocol pProtocol) {
+        public static void Update(StreamWriter pWriter, Protocol pProtocol, Socket socket, int counter) {
             string Output = "";
             switch (pProtocol)
             {
@@ -51,10 +53,11 @@ namespace locationserver
             }
             Console.WriteLine(">> Replying to client with: ");
             Console.Write(Output);
+            Log.AddLog("Replying to client " + counter + "With message: " + Output, socket);
             pWriter.Flush();
             pWriter.Close();
         }
-        public static void Locate(StreamWriter pWriter, Protocol pProtocol, string pName) {
+        public static void Locate(StreamWriter pWriter, Protocol pProtocol, string pName, Socket socket, int counter) {
             string output = "";
             switch (pProtocol)
             {
@@ -129,8 +132,12 @@ namespace locationserver
                     }
                     break;
             }
-            Console.WriteLine(">> Replying to client with: ");
-            Console.Write(output);
+            if (Program.m_Debug)
+            {
+                Console.WriteLine(">> Replying to client with: ");
+                Console.Write(output);
+                Log.AddLog("Replying to client " + counter + "With message: " + output, socket);
+            }
             pWriter.Flush();
             pWriter.Close();
         }

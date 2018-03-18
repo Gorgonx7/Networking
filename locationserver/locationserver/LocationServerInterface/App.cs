@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using locationserver;   
+using locationserverConsole;   
 using Microsoft.Win32.SafeHandles; 
 namespace LocationServerInterface
 {
@@ -26,10 +26,13 @@ namespace LocationServerInterface
                             break;
                         case "-p":
                             window.Port.Text = e.Args[x + 1];
+                            x++; 
                             break;
                         case "-l":
                             break;
                         case "-f":
+                            window.PathBox.Text = e.Args[x + 1];
+                            x++;
                             break;
                     }
                 }
@@ -38,12 +41,14 @@ namespace LocationServerInterface
             }
             else {
                 AllocConsole();
-                // stdout's handle seems to always be equal to 7
+                
                 
                 Program.createTCPListener();
                 Program.Main(e.Args);
+                
             }
         }
+        
 
     }
 }

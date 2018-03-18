@@ -5,13 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace locationserver
+namespace locationserverConsole
 {
     public class ElementManager
     {
         private Dictionary<string, string> dictionary = new Dictionary<string, string>();
         public ElementManager() {
-            LoadElements();
+            try
+            {
+               // LoadElements();
+            }
+            catch {
+                Console.WriteLine("Unable to load dictionary, has it been created?");
+            }
 
         }
         public string GetLocation(string pName) {
@@ -58,8 +64,8 @@ namespace locationserver
             streamWriter.Flush();
             streamWriter.Close();
         }
-        private void LoadElements() {
-            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + @"dictionary.txt");
+        public void LoadElements(string Path) {
+            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
                 string key = "";

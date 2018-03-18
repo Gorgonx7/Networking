@@ -69,8 +69,15 @@ namespace location
         }
         public static string start(string[] args)
         {
-            Message message = new Message(args);
-            return MessageWrapper.SendMessage(message);
+            try
+            {
+                Message message = new Message(args);
+                return MessageWrapper.SendMessage(message);
+            }
+            catch (Exception e)
+            {
+                return "Error unknown in settings";
+            }
         }
         public static string WPFInitialise(string name, string location, string address, int port, int timeout, MessageProtocol protocol, bool debug) {
             string args = "";

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace locationserver
+namespace locationserverConsole
 {
     class ClientHandler
     {
@@ -26,6 +26,7 @@ namespace locationserver
         {
             m_Socket = pClientSocket;
             m_ClientNumber = pClientNumber;
+            Log.AddLog("Accepting client" + m_ClientNumber + "OK", pClientSocket);
             Thread Thread = new Thread(DoRequest);
             Thread.Start();
         }
@@ -48,7 +49,7 @@ namespace locationserver
                 
                 Console.WriteLine(" >> " + "From client-" + m_ClientNumber);
                 List<string> data = new List<string>();
-                int counter = 0;
+                
                 string holder = "";
                 while (sr.Peek() > -1)
                 {
@@ -72,9 +73,13 @@ namespace locationserver
                 for (int x = 0; x < data.Count; x++)
                 {
                     dataFromClient[x] = data[x];
-                    Console.WriteLine(dataFromClient[x]);
+                    if (Program.m_Debug)
+                    {
+                        Console.WriteLine(dataFromClient[x]);
+                    }
+           
                 }
-
+                Log.AddLog("Recived data from client " + m_ClientNumber + "Data: " + dataFromClient, m_Socket);
 
                 if (!Phase(dataFromClient))
                 {
@@ -83,11 +88,19 @@ namespace locationserver
                     {
                         m_Type = Type.update;
                         m_Name = dataFromClient[0].Split(' ')[0];
-                        for (int x = 1; x < dataFromClient[0].Split(' ').Length; x++)
+                        for (int x = 0; x < dataFromClient[0].Split(' ').Length; x++)
                         {
                             m_Location = m_Location + " " + dataFromClient[0].Split(' ')[x];
                         }
                         m_Location = m_Location.TrimStart();
+                        if (m_Location[0] == '\t') {
+                            m_Location = m_Location.Substring(1);
+                            Log.AddLog("Detected ambiguaty between 0.9 and whois protocol, fixing", m_Socket);
+                            if (Program.m_Debug)
+                            {
+                                Console.WriteLine("Detected ambiguaty between 0.9 and whois protocol, fixing");
+                            }
+                        }
                     }
                     else
                     {
@@ -95,19 +108,22 @@ namespace locationserver
                         m_Name = dataFromClient[0];
                     }
                 }
+
+
                 switch (m_Type)
                 {
                     case Type.lookup:
-                        Outputer.Locate(sw, m_Protocol, m_Name);
+                        Outputer.Locate(sw, m_Protocol, m_Name, m_Socket, m_ClientNumber);
                         break;
                     case Type.update:
                         Program.m_Manager.UpdateLocation(m_Name, m_Location);
-                        Outputer.Update(sw, m_Protocol);
+                        Outputer.Update(sw, m_Protocol, m_Socket, m_ClientNumber);
                         break;
                 }
             }
             catch (Exception ex)
             {
+                Log.AddLog("Error with Client " + m_ClientNumber + " Error Message: " + ex.Message, m_Socket);
                 Console.WriteLine(ex.ToString());
             }
             finally
@@ -155,6 +171,7 @@ namespace locationserver
                             m_Name += args[0][x];
                         }
                         m_Name = m_Name.Substring(0, m_Name.Length - 9);
+                        
                         m_Location = args[3];
                         break;
                     case "GET":

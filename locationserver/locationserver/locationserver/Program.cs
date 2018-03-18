@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using System.Threading;
-namespace locationserver
+namespace locationserverConsole
 {
     public class Program
     {
@@ -16,7 +16,8 @@ namespace locationserver
         private static int m_Port = 43;
         public static bool m_Debug = false;
         private static Socket m_Connection;
-        
+        private static bool isSavingFile = false;
+        private static string SaveFilePath;
         public static void createTCPListener() {
             m_Listener = new TcpListener(IPAddress.Any, m_Port);
         }
@@ -29,7 +30,8 @@ namespace locationserver
                
                 m_Connection.Close();
                 m_Listener.Stop();
-                return true;
+                Log.SaveLog();
+                return true; 
             }
             catch {
                 return false;
@@ -37,6 +39,8 @@ namespace locationserver
         }
         public static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
             for (int x = 0; x < args.Length; x++) {
                 if(args[x] == "-d") {
                     m_Debug = true;
@@ -57,7 +61,18 @@ namespace locationserver
                     createTCPListener();
                 }
                 if (args[x] == "-l") {
+                    Log.UpdateLogLocation(args[x + 1]);
+                }
+                if (args[x] == "-f") {
+                    try
+                    {
+                        m_Manager.LoadElements(args[x + 1]);
+                    }
+                    catch {
 
+                    }
+                    isSavingFile = true;
+                    SaveFilePath = args[x + 1];
                 }
             }
             
@@ -76,9 +91,9 @@ namespace locationserver
                     Console.WriteLine(" >> " + "Client No:" + counter + " started!");
                     ClientHandler clientHandler = new ClientHandler();
                     clientHandler.startClient(m_Connection, counter);
-                    
-                    //m_Connection.Close();
 
+                    //m_Connection.Close();
+                    counter++;
                 }
 
 
@@ -94,12 +109,33 @@ namespace locationserver
 
             }
             finally {
-                
+               
             }
 
 
         }
+        public static void OnProcessExit(object sender, EventArgs e)
+        {
+            try
+            {
+                Log.SaveLog();
+            }
+            catch
+            {
+                
+            }
+            if (isSavingFile)
+            {
+                try
+                {
+                    m_Manager.SaveElements(SaveFilePath);
+                }
+                catch
+                {
 
+                }
+            }
+        }
 
 
 
