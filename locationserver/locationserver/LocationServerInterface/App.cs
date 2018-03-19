@@ -25,13 +25,37 @@ namespace LocationServerInterface
                             window.Debug.IsChecked = true;
                             break;
                         case "-p":
-                            window.Port.Text = e.Args[x + 1];
-                            x++; 
+                            try
+                            {
+                                window.Port.Text = e.Args[x + 1];
+                                
+                            }
+                            catch
+                            {
+                                MessageBox.Show("Invalid Port number - using 43");
+                            }
+                            x++;
                             break;
                         case "-l":
+                            try
+                            {
+                                window.LogCheckBox.IsChecked = true;
+                                window.LogPath.Text = e.Args[x + 1];
+                            }
+                            catch {
+                                MessageBox.Show("Invalid Log Path, using default log.txt");
+                            }
+                            x++;
                             break;
                         case "-f":
-                            window.PathBox.Text = e.Args[x + 1];
+                            try
+                            {
+                                window.DatabaseCustomBox.IsChecked = true;
+                                window.PathBox.Text = e.Args[x + 1];
+                            }
+                            catch {
+                                MessageBox.Show("Invalid command path, using dictionary.txt instead");
+                            }
                             x++;
                             break;
                     }

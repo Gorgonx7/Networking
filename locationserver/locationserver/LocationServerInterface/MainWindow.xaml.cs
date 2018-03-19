@@ -13,7 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 using locationserverConsole;
+using System.IO;
+
 namespace LocationServerInterface
 {
     /// <summary>
@@ -26,10 +29,11 @@ namespace LocationServerInterface
         Thread thread;
         public MainWindow()
         {
-            
+
             InitializeComponent();
         }
-        private void Start_Click(Object sender, RoutedEventArgs e) {
+        private void Start_Click(Object sender, RoutedEventArgs e)
+        {
             if ((string)startstopbutton.Content == "Start")
             {
                 // start the server
@@ -39,7 +43,8 @@ namespace LocationServerInterface
                     PortNumber = int.Parse(Port.Text);
                     Port.IsEnabled = false;
                 }
-                catch {
+                catch
+                {
                     MessageBox.Show("The port but be a valid whole number");
                     return;
                 }
@@ -51,7 +56,7 @@ namespace LocationServerInterface
                     args[0] = "-d";
                 }
                 Debug.IsEnabled = false;
-                thread = new Thread(()=>Program.Main(args));
+                thread = new Thread(() => Program.Main(args));
                 thread.Start();
                 StatusLable.Content = "The server is running";
                 StatusImage_GreenTick.Visibility = Visibility.Visible;
@@ -88,7 +93,8 @@ namespace LocationServerInterface
                 }
                 LogIsOpen = true;
             }
-            else {
+            else
+            {
                 LogWindow.Visibility = Visibility.Hidden;
                 LogIsOpen = false;
             }
@@ -97,26 +103,40 @@ namespace LocationServerInterface
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LogWindow.Close();
-            
-            if (thread != null)
+            try
+            {
+                Program.CloseConnection();
+            }
+            catch
             {
 
-                thread.Abort();
             }
-            
-            if (PathBox.IsEnabled) {
-                
-                    try
-                    {
-                        locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Failed to find custom directory specified \n Have you defined it correctly?");
-                    }
-                
+            if (thread != null)
+            {
+                try
+                {
+                    thread.Abort();
                 }
-            
+                catch
+                {
+
+                }
+            }
+
+            if (PathBox.IsEnabled)
+            {
+
+                try
+                {
+                    locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Failed to find custom directory specified \n Have you defined it correctly?");
+                }
+
+            }
+
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -124,14 +144,78 @@ namespace LocationServerInterface
             if (!PathBox.IsEnabled)
             {
                 PathBox.IsEnabled = true;
-                
+                DictionaryButton.IsEnabled = true;
                 Program.isSavingFile = true;
-                Program.SaveFilePath =  PathBox.Text;
+                Program.SaveFilePath = PathBox.Text;
             }
-            else {
+            else
+            {
                 PathBox.IsEnabled = false;
-                
+                DictionaryButton.IsEnabled = false;
+                Program.isSavingFile = false;
+                Program.SaveFilePath = PathBox.Text;
             }
+        }
+
+        private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
+        {
+            if (LogPath.IsEnabled)
+            {
+                LogPath.IsEnabled = false;
+                locationserverConsole.Log.UpdateLogLocation("log.txt");
+                LogButton.IsEnabled = false;
+            }
+            else
+            {
+                LogPath.IsEnabled = true;
+                locationserverConsole.Log.UpdateLogLocation(LogPath.Text);
+                LogButton.IsEnabled = true;
+            }
+        }
+
+        private void LogButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Filter = "Text|*.txt|All|*.*";
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+
+                    LogPath.Text = System.IO.Path.GetFullPath(dialog.FileName);
+                    MessageBox.Show("Location of log changed to: " + LogPath.Text);
+                }
+
+
+            }
+        }
+
+        private void DictionaryButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                dialog.Filter = "Text|*.txt|All|*.*";
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+
+                    PathBox.Text = System.IO.Path.GetFullPath(dialog.FileName);
+                    MessageBox.Show("Location of log changed to: " + PathBox.Text);
+                }
+
+
+            }
+
+        }
+
+        private void PathBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Program.SaveFilePath = PathBox.Text;
+        }
+
+        private void LogPath_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            locationserverConsole.Log.UpdateLogLocation(LogPath.Text);
         }
     }
 }
