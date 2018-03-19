@@ -113,6 +113,11 @@ namespace locationserverConsole
                         Outputer.Update(sw, m_Protocol, m_Socket, m_ClientNumber);
                         break;
                 }
+                if (Program.isSavingFile)
+                {
+
+                    Program.m_Manager.SaveElements(Program.SaveFilePath);
+                }
             }
             catch (Exception ex)
             {

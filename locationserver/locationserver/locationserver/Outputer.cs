@@ -21,9 +21,9 @@ namespace locationserverConsole
             switch (pProtocol)
             {
                 case Protocol.WhoIs:
+                    Output = "OK";
                     pWriter.WriteLine("OK");
-                    pWriter.Flush();
-                    pWriter.Close();
+                    
                     break;
                 case Protocol.HTTP1:
                     /*

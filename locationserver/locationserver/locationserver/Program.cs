@@ -16,7 +16,7 @@ namespace locationserverConsole
         public static ElementManager m_Manager = new ElementManager();
         private static TcpListener m_Listener;
         private static int m_Port = 43;
-        public static bool m_Debug = true;
+        public static bool m_Debug = false;
         private static Socket m_Connection;
         public static bool isSavingFile = false;
         public static string SaveFilePath;
@@ -62,6 +62,7 @@ namespace locationserverConsole
         }
         public static void Main(string[] args)
         {
+            bool error = false;
             SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
 
             for (int x = 0; x < args.Length; x++) {
@@ -84,57 +85,92 @@ namespace locationserverConsole
                     createTCPListener();
                 }
                 if (args[x] == "-l") {
-                    Log.UpdateLogLocation(args[x + 1]);
+                    
+                    try
+                    {
+                        Log.UpdateLogLocation(args[x + 1]);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                        error = true;
+                    }
+                    
                 }
                 if (args[x] == "-f") {
                     try
                     {
+                        if (m_Debug) {
+                            Console.WriteLine("Saving elements to location: " + args[x + 1]);
+                            Thread.Sleep(3000);
+                        }
+                        if(args[x + 1] == "")
+                        {
+                            continue;
+                        }
                         m_Manager.LoadElements(args[x + 1]);
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        if (m_Debug)
+                        {
+                            Console.WriteLine(e);
+                            //error = true;
+                        }
+                    }
+                    try
+                    {
+                    
+                    
+                        SaveFilePath = args[x + 1];
+                        isSavingFile = true;
                     }
                     catch {
-
+                        error = true;
                     }
-                    isSavingFile = true;
-                    SaveFilePath = args[x + 1];
                 }
             }
-            
-           
-            try
+
+            if (!error)
             {
-                if (m_Listener == null) {
-                    createTCPListener();
-                }
-                m_Listener.Start();
-                Console.WriteLine(">> " + "Server Started");
-                int counter = 0;
-                while (true)
+                try
                 {
-                    m_Connection = m_Listener.AcceptSocket();
-                    Console.WriteLine(" >> " + "Client No:" + counter + " started!");
-                    ClientHandler clientHandler = new ClientHandler();
-                    clientHandler.startClient(m_Connection, counter);
+                    if (m_Listener == null)
+                    {
+                        createTCPListener();
+                    }
+                    m_Listener.Start();
+                    Console.WriteLine(">> " + "Server Started");
+                    int counter = 0;
+                    while (true)
+                    {
+                        m_Connection = m_Listener.AcceptSocket();
+                        Console.WriteLine(" >> " + "Client No:" + counter + " started!");
+                        ClientHandler clientHandler = new ClientHandler();
+                        clientHandler.startClient(m_Connection, counter);
 
-                    //m_Connection.Close();
-                    counter++;
+                        //m_Connection.Close();
+                        counter++;
+                    }
+
+
+
+
+
+                    //m_Manager.SaveElements();
+
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
 
-
-
-
-
-                //m_Manager.SaveElements();
-
+                }
+                finally
+                {
+                    Log.SaveLog();
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-
-            }
-            finally {
-                Log.SaveLog();
-            }
-
 
         }
 

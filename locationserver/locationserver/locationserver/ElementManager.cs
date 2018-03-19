@@ -44,16 +44,7 @@ namespace locationserverConsole
             Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
             return true;
         }
-        public void SaveElements(bool sig, string Path) {
-            StreamWriter streamWriter = new StreamWriter(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
-            foreach (KeyValuePair<string, string> item in dictionary)
-            {
-                 streamWriter.WriteLine( item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
-            }
-
-            streamWriter.Flush();
-            
-        }
+        
         public void SaveElements(string Path) {
             StreamWriter streamWriter = new StreamWriter(Path);
             
@@ -66,8 +57,8 @@ namespace locationserverConsole
            
         }
         public void LoadElements(string Path) {
-            StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
-
+            //StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
+            StreamReader streamReader = new StreamReader(Path);
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
                 string key = "";

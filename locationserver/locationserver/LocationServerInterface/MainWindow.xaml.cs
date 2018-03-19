@@ -105,8 +105,7 @@ namespace LocationServerInterface
             }
             
             if (PathBox.IsEnabled) {
-                if ((bool)SpecialDirectory.IsChecked)
-                {
+                
                     try
                     {
                         locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
@@ -115,18 +114,9 @@ namespace LocationServerInterface
                     {
                         MessageBox.Show("Failed to find custom directory specified \n Have you defined it correctly?");
                     }
+                
                 }
-                else {
-                    try
-                    {
-                        Program.m_Manager.SaveElements(true, PathBox.Text);
-                    }
-                    catch(Exception a)
-                    {
-                        MessageBox.Show("An unknown error occoured during file saving \n" + a.Message);
-                    }
-                }
-            }
+            
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -134,14 +124,13 @@ namespace LocationServerInterface
             if (!PathBox.IsEnabled)
             {
                 PathBox.IsEnabled = true;
-                SpecialDirectory.IsEnabled = true;
+                
                 Program.isSavingFile = true;
                 Program.SaveFilePath =  PathBox.Text;
             }
             else {
                 PathBox.IsEnabled = false;
-                SpecialDirectory.IsEnabled = false;
-                SpecialDirectory.IsChecked = false;
+                
             }
         }
     }

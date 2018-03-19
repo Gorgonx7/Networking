@@ -20,7 +20,6 @@
         <CheckBox Content="Save database to file" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
         <TextBox x:Name="PathBox" HorizontalAlignment="Left" Height="24" Margin="10,30,0,0" TextWrapping="Wrap" Text="dictionary.txt" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
         <Label  Content="Path of save file" HorizontalAlignment="Left" Margin="132,26,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="SpecialDirectory" Content="Custom Full Directory e.g C://directory" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" IsEnabled="False"/>
 
     </Grid>
 </Window>
