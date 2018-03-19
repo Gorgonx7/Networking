@@ -140,6 +140,8 @@ namespace location
             }
             catch (Exception e)
             {
+                        byte[] ret = new byte[read];
+                        Array.Copy(buffer, ret, read);
                 if (debug) {
                     Console.WriteLine("Client timed out, consider extending the timeout period if you require more data");
                 }
@@ -147,13 +149,19 @@ namespace location
                 {
                     if (System.Text.Encoding.ASCII.GetString(buffer).Split((char)13)[14].Contains("<!DOCTYPE html>"))
                     {
+                        
                         return System.Text.Encoding.ASCII.GetString(buffer);
                     }
                 }
                 catch {
 
                 }
-                throw e;
+                if(buffer.Length == 0)
+                {
+                    throw e;
+                }
+                return System.Text.Encoding.ASCII.GetString(buffer);
+                
             }
         }
     }

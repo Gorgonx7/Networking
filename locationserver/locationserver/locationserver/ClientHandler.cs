@@ -88,19 +88,12 @@ namespace locationserverConsole
                     {
                         m_Type = Type.update;
                         m_Name = dataFromClient[0].Split(' ')[0];
-                        for (int x = 0; x < dataFromClient[0].Split(' ').Length; x++)
+                        for (int x = 1; x < dataFromClient[0].Split(' ').Length; x++)
                         {
-                            m_Location = m_Location + " " + dataFromClient[0].Split(' ')[x];
+                            m_Location += " " + dataFromClient[0].Split(' ')[x];
                         }
                         m_Location = m_Location.TrimStart();
-                        if (m_Location[0] == '\t') {
-                            m_Location = m_Location.Substring(1);
-                            Log.AddLog("Detected ambiguaty between 0.9 and whois protocol, fixing", m_Socket);
-                            if (Program.m_Debug)
-                            {
-                                Console.WriteLine("Detected ambiguaty between 0.9 and whois protocol, fixing");
-                            }
-                        }
+                        
                     }
                     else
                     {

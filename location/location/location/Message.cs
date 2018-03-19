@@ -58,10 +58,27 @@ namespace location
 
             for (var x = 0; x < args.Length; x++)
             {
+                if (args[x] == "")
+                {
+                    if (!m_FoundUsername)
+                    {
+                        m_Type = MessageType.lookup;
+                        m_FoundUsername = true;
+                        m_Username = args[x];
+                    }
+                    else
+                    {
+                        m_Type = MessageType.update;
+                        m_Location = args[x];
+                    }
+                    continue;
+                }
+
                 if (args[x][0] == '-')
                 {
                     switch (args[x])
                     {
+                        
                         case "-p":
                             m_Port = int.Parse(args[x + 1]);
                             
@@ -179,9 +196,7 @@ namespace location
                     }
                     else
                     {
-                        if (m_Location[0] == '/') {
-                            m_Location = "\t" + m_Location;
-                        }
+                        
                         Output = m_Username + " " + m_Location;
                     }
                     break;

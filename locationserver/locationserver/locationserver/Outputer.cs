@@ -55,7 +55,7 @@ namespace locationserverConsole
             Console.Write(Output);
             Log.AddLog("Replying to client " + counter + "With message: " + Output, socket);
             pWriter.Flush();
-            pWriter.Close();
+            
         }
         public static void Locate(StreamWriter pWriter, Protocol pProtocol, string pName, Socket socket, int counter) {
             string output = "";
@@ -139,7 +139,7 @@ namespace locationserverConsole
                 Log.AddLog("Replying to client " + counter + "With message: " + output, socket);
             }
             pWriter.Flush();
-            pWriter.Close();
+           
         }
 
     }

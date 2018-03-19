@@ -52,20 +52,22 @@ namespace locationserverConsole
             }
 
             streamWriter.Flush();
-            streamWriter.Close();
+            
         }
         public void SaveElements(string Path) {
             StreamWriter streamWriter = new StreamWriter(Path);
+            
             foreach (KeyValuePair<string, string> item in dictionary)
             {
                 streamWriter.WriteLine(item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
             }
 
             streamWriter.Flush();
-            streamWriter.Close();
+           
         }
         public void LoadElements(string Path) {
             StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
+
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
                 string key = "";

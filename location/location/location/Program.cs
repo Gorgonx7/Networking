@@ -76,6 +76,7 @@ namespace location
             }
             catch (Exception e)
             {
+                Console.Write(e.Message);
                 return "Error unknown in settings";
             }
         }

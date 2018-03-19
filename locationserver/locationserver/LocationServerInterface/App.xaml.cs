@@ -15,8 +15,8 @@ namespace LocationServerInterface
     {
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            locationserverConsole.Program.OnProcessExit(sender, e);
-            locationserverConsole.Program.m_Manager.SaveElements()
+            locationserverConsole.Program.OnProcessExit();
+            //locationserverConsole.Program.m_Manager.SaveElements();
         }
     }
 }

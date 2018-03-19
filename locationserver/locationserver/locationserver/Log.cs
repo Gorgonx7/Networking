@@ -26,7 +26,7 @@ namespace locationserverConsole
             {
                 output += remoteIpEndPoint.Address;
             }
-            output += " - - [" + DateTime.Now + "]" + log;
+            output += " - - [" + DateTime.Now + "] " + log;
             m_Log.Add(output);
         }
         public static void SaveLog()

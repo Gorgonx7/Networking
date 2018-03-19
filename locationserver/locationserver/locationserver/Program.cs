@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using System.Threading;
+using System.Runtime.InteropServices;
+
 namespace locationserverConsole
 {
     public class Program
@@ -14,10 +16,31 @@ namespace locationserverConsole
         public static ElementManager m_Manager = new ElementManager();
         private static TcpListener m_Listener;
         private static int m_Port = 43;
-        public static bool m_Debug = false;
+        public static bool m_Debug = true;
         private static Socket m_Connection;
-        private static bool isSavingFile = false;
-        private static string SaveFilePath;
+        public static bool isSavingFile = false;
+        public static string SaveFilePath;
+       
+#region endmanager
+        [DllImport("kernel32")]
+        static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+        public delegate bool HandlerRoutine(CtrlTypes CtrlType);
+        public enum CtrlTypes
+
+        {
+
+            CTRL_C_EVENT = 0,
+
+            CTRL_BREAK_EVENT,
+
+            CTRL_CLOSE_EVENT,
+
+            CTRL_LOGOFF_EVENT = 5,
+
+            CTRL_SHUTDOWN_EVENT
+
+        }
+#endregion 
         public static void createTCPListener() {
             m_Listener = new TcpListener(IPAddress.Any, m_Port);
         }
@@ -27,10 +50,10 @@ namespace locationserverConsole
         public static bool CloseConnection() {
             try
             {
-               
-                m_Connection.Close();
                 m_Listener.Stop();
-                Log.SaveLog();
+                m_Connection.Close();
+                
+                //Log.SaveLog();
                 return true; 
             }
             catch {
@@ -39,7 +62,7 @@ namespace locationserverConsole
         }
         public static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+            SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
 
             for (int x = 0; x < args.Length; x++) {
                 if(args[x] == "-d") {
@@ -109,12 +132,39 @@ namespace locationserverConsole
 
             }
             finally {
-               
+                Log.SaveLog();
             }
 
 
         }
-        public static void OnProcessExit(object sender, EventArgs e)
+
+        private static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
+
+        {
+
+            // Put your own handler here
+
+            switch (ctrlType)
+
+            {
+
+                case CtrlTypes.CTRL_C_EVENT:
+                case CtrlTypes.CTRL_BREAK_EVENT:                    
+                case CtrlTypes.CTRL_CLOSE_EVENT:                  
+                case CtrlTypes.CTRL_LOGOFF_EVENT:
+                case CtrlTypes.CTRL_SHUTDOWN_EVENT:
+                    OnProcessExit();
+                    break;
+
+
+
+            }
+
+            return true;
+
+        }
+
+        public static void OnProcessExit()
         {
             try
             {
@@ -130,9 +180,9 @@ namespace locationserverConsole
                 {
                     m_Manager.SaveElements(SaveFilePath);
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    Console.WriteLine(e.Message);
                 }
             }
         }

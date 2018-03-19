@@ -135,6 +135,8 @@ namespace LocationServerInterface
             {
                 PathBox.IsEnabled = true;
                 SpecialDirectory.IsEnabled = true;
+                Program.isSavingFile = true;
+                Program.SaveFilePath =  PathBox.Text;
             }
             else {
                 PathBox.IsEnabled = false;
