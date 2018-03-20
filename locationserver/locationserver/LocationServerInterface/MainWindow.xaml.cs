@@ -16,14 +16,20 @@ using System.Windows.Shapes;
 
 using locationserverConsole;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace LocationServerInterface
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("kernel32")]
+        static extern bool AllocConsole(); // external method to allocate the console
+        [DllImport("kernel32")]
+        static extern bool FreeConsole();
         Log LogWindow = new Log(); // create the log window 
         public static bool LogIsOpen = false;
         Thread thread;
@@ -47,7 +53,7 @@ namespace LocationServerInterface
                 try
                 {
                     PortNumber = int.Parse(Port.Text);
-                    
+
                     if (PortNumber <= 0) // validate the port number
                     {
                         throw new Exception();
@@ -56,7 +62,7 @@ namespace LocationServerInterface
                 }
                 catch
                 {
-                    MessageBox.Show("The port but be a valid positive whole number that is greater than 0","Error Message", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    MessageBox.Show("The port but be a valid positive whole number that is greater than 0", "Error Message", MessageBoxButton.OK, MessageBoxImage.Hand);
                     return; // cancel start
                 }
                 Program.SetPort(PortNumber); // set the port in the console app
@@ -152,7 +158,7 @@ namespace LocationServerInterface
                 {
                     Program.isSavingFile = true;
                     Program.SaveFilePath = PathBox.Text; // ensure the save paths are up to date
-                   // locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
+                                                         // locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
                 }
                 catch
                 {
@@ -224,7 +230,7 @@ namespace LocationServerInterface
                 {
                     //change the log path text box to the result path
                     LogPath.Text = System.IO.Path.GetFullPath(dialog.FileName);
-                    MessageBox.Show("Location of log changed to: " + LogPath.Text, "Load",MessageBoxButton.OK,MessageBoxImage.Asterisk);
+                    MessageBox.Show("Location of log changed to: " + LogPath.Text, "Load", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
 
 
@@ -245,7 +251,7 @@ namespace LocationServerInterface
                 {
 
                     PathBox.Text = System.IO.Path.GetFullPath(dialog.FileName);
-                    MessageBox.Show("Location of log changed to: " + PathBox.Text, "Load",MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("Location of log changed to: " + PathBox.Text, "Load", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
 
 
@@ -287,6 +293,18 @@ namespace LocationServerInterface
                 MessageBox.Show("Invalid Port Number - please use a postitive whole number in ms, use 0 to disable timeouts");
                 TimeoutText.Text = "1000";
             }
+        }
+
+        private void Debug_Checked(object sender, RoutedEventArgs e)
+        {
+           
+                AllocConsole();
+            
+        }
+
+        private void Debug_Unchecked(object sender, RoutedEventArgs e)
+        {
+            FreeConsole();
         }
     }
 }

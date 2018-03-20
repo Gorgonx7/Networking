@@ -48,6 +48,7 @@ namespace locationserverConsole
                 StreamWriter sw = new StreamWriter(networkStream);
                 if (Program.m_Debug)
                 {
+                    Console.WriteLine("Timeout = " + Program.m_Timeout);
                     Console.WriteLine(" >> " + "From client-" + m_ClientNumber);
                 }
 

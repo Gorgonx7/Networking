@@ -63,6 +63,21 @@ namespace LocationServerInterface
                             }
                             x++;
                             break;
+                        case "-t":
+                            try
+                            {
+                                
+                                if (int.Parse(e.Args[x + 1]) < 0)
+                                {
+                                    throw new Exception();
+                                }
+                                window.TimeoutText.Text = e.Args[x + 1];
+                            }
+                            catch
+                            {
+                                MessageBox.Show("The Timeout is invalid - it must be a valid positive whole number", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            break;
                     }
                 }
                 window.Show(); // show the window

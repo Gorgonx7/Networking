@@ -199,11 +199,16 @@ namespace locationserverConsole
 
         }
 
+        /// <summary>
+        /// This handles when the application exits and allows me to gracefully exit the application
+        /// </summary>
+        /// <param name="ctrlType"></param>
+        /// <returns></returns>
         private static bool ConsoleCtrlCheck(CtrlTypes ctrlType)
 
         {
 
-            // Put your own handler here
+            
 
             switch (ctrlType)
 
@@ -225,6 +230,9 @@ namespace locationserverConsole
 
         }
 
+        /// <summary>
+        /// this saves the logs and the dictionary
+        /// </summary>
         public static void OnProcessExit()
         {
             try

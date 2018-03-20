@@ -43,11 +43,15 @@ namespace locationInterface
             }
             try
             {
-                Portnumb = Math.Abs(int.Parse(Port.Text)); // try to convert the port to an int, but 
+                Portnumb = int.Parse(Port.Text); // try to convert the port to an int, but
+                if(Portnumb <= 0)
+                {
+                    throw new Exception();
+                }
             }
             catch
             {
-                MessageBox.Show("The port number has to be a valid whole number", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("The port number has to be a valid positive whole number greater than 0", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return; // jump out of the method should use return
             }
             try
