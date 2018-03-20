@@ -37,13 +37,17 @@ namespace locationInterface
             int Portnumb; // the port for the client to send the message too
             int Timeout; // the timeout for the client side of the application
             string hostname; // the host name of the server that the message will be sent too
+            if (Username.Text.Contains(" ")) { // check for spaces in the name
+                MessageBox.Show("Invalid name: your name cannot contain spaces","Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             try
             {
-                Portnumb = int.Parse(Port.Text); // try to convert the port to an int, but 
+                Portnumb = Math.Abs(int.Parse(Port.Text)); // try to convert the port to an int, but 
             }
             catch
             {
-                MessageBox.Show("The port number has to be a valid whole number");
+                MessageBox.Show("The port number has to be a valid whole number", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return; // jump out of the method should use return
             }
             try
@@ -52,7 +56,7 @@ namespace locationInterface
             }
             catch
             {
-                MessageBox.Show("The timeout period has to be a valid whole number");
+                MessageBox.Show("The timeout period has to be a valid whole number","Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             location.MessageProtocol messageProtocol; // define the message protocol relative to the dropdown box

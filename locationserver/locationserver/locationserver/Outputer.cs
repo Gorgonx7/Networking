@@ -8,14 +8,20 @@ using System.Net.Sockets;
 
 namespace locationserverConsole
 {
-    public enum Type { update, lookup }
-    public enum Protocol { HTTP1, HTTP11, HTTP9, WhoIs }
+    public enum Type { update, lookup } // the enum for the type of message
+    public enum Protocol { HTTP1, HTTP11, HTTP9, WhoIs } // the enum for the protocol
     static class Outputer
     {
 
         
        
-
+        /// <summary>
+        /// This method is called when the message was a update request
+        /// </summary>
+        /// <param name="pWriter">the stream writer attatched to the client</param>
+        /// <param name="pProtocol">the protocol that the message was sent by</param>
+        /// <param name="socket">the socket for logging</param>
+        /// <param name="counter">the counter for logging</param>
         public static void Update(StreamWriter pWriter, Protocol pProtocol, Socket socket, int counter) {
             string Output = "";
             switch (pProtocol)
@@ -57,6 +63,14 @@ namespace locationserverConsole
             pWriter.Flush();
             
         }
+        /// <summary>
+        /// This method is the same as the above method except for look ups
+        /// </summary>
+        /// <param name="pWriter"> the stream writer attatched to the client stream</param>
+        /// <param name="pProtocol">the protocol the message was sent by</param>
+        /// <param name="pName">the name of the location to look up</param>
+        /// <param name="socket">the socket for logging</param>
+        /// <param name="counter">the client number for logging</param>
         public static void Locate(StreamWriter pWriter, Protocol pProtocol, string pName, Socket socket, int counter) {
             string output = "";
             switch (pProtocol)
@@ -136,8 +150,9 @@ namespace locationserverConsole
             {
                 Console.WriteLine(">> Replying to client with: ");
                 Console.Write(output);
-                Log.AddLog("Replying to client " + counter + "With message: " + output, socket);
+                
             }
+            Log.AddLog("Replying to client " + counter + "With message: " + output, socket);
             pWriter.Flush();
            
         }

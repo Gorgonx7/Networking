@@ -13,19 +13,19 @@ namespace locationserverConsole
 {
     public class Program
     {
-        public static ElementManager m_Manager = new ElementManager();
-        private static TcpListener m_Listener;
-        private static int m_Port = 43;
-        public static bool m_Debug = false;
-        private static Socket m_Connection;
-        public static bool isSavingFile = false;
-        public static string SaveFilePath;
-       
+        public static ElementManager m_Manager = new ElementManager(); // create the database
+        private static TcpListener m_Listener; // the listener for the server
+        private static int m_Port = 43; // the port the server is set to listen on
+        public static bool m_Debug = false; // if the server is in debug mode
+        private static Socket m_Connection; // the connection to the client via sockets
+        public static bool isSavingFile = false; // if the database is saving
+        public static string SaveFilePath; // the path to save the database too
+        public static int m_Timeout = 1000; // the timeout period
 #region endmanager
         [DllImport("kernel32")]
-        static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
-        public delegate bool HandlerRoutine(CtrlTypes CtrlType);
-        public enum CtrlTypes
+        static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add); // external method that handles when the console app closes
+        public delegate bool HandlerRoutine(CtrlTypes CtrlType); // delegate to define the handler for when the server closes
+        public enum CtrlTypes // an enum to hold the types of events that cause the server to close
 
         {
 
@@ -42,7 +42,7 @@ namespace locationserverConsole
         }
 #endregion 
         public static void createTCPListener() {
-            m_Listener = new TcpListener(IPAddress.Any, m_Port);
+            m_Listener = new TcpListener(IPAddress.Any, m_Port); // create the TCP listener
         }
         public static void SetPort(int port) {
             m_Port = port;
@@ -50,7 +50,7 @@ namespace locationserverConsole
         public static bool CloseConnection() {
             try
             {
-                m_Listener.Stop();
+                m_Listener.Stop(); // stop the server
                 m_Connection.Close();
                 
                 //Log.SaveLog();
@@ -60,11 +60,15 @@ namespace locationserverConsole
                 return false;
             }
         }
+        /// <summary>
+        /// used by the wpf and by the console version to handle all the initalisations
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            bool error = false;
-            SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true);
-
+            bool error = false; // if this is true there has been an error and the server should not start
+            SetConsoleCtrlHandler(new HandlerRoutine(ConsoleCtrlCheck), true); // sets the exit monitor method
+            // process all the arugments fead to it
             for (int x = 0; x < args.Length; x++) {
                 if(args[x] == "-d") {
                     m_Debug = true;
@@ -94,6 +98,7 @@ namespace locationserverConsole
                     {
                         Console.WriteLine(e.Message);
                         error = true;
+                        return;
                     }
                     
                 }
@@ -128,25 +133,45 @@ namespace locationserverConsole
                     }
                     catch {
                         error = true;
+                        return;
+                    }
+                }
+                if(args[x] == "-t")
+                {
+                    try
+                    {
+                        m_Timeout = int.Parse(args[x + 1]);
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine(e.Message + " -- Invalid timeout number");
+                        return;
                     }
                 }
             }
 
             if (!error)
             {
+                //if there has not been an error
                 try
                 {
-                    if (m_Listener == null)
+                    if (m_Listener == null) // if the server is in console mode
                     {
-                        createTCPListener();
+                        createTCPListener(); // create the tcp listener
                     }
-                    m_Listener.Start();
-                    Console.WriteLine(">> " + "Server Started");
-                    int counter = 0;
+                    m_Listener.Start(); // start listening
+                    if (m_Debug)
+                    {
+                        Console.WriteLine(">> " + "Server Started");
+                    }
+                    int counter = 0; // start the client counter
                     while (true)
                     {
                         m_Connection = m_Listener.AcceptSocket();
-                        Console.WriteLine(" >> " + "Client No:" + counter + " started!");
+                        if (m_Debug)
+                        {
+                            Console.WriteLine(" >> " + "Client No:" + counter + " started!");
+                        }
                         ClientHandler clientHandler = new ClientHandler();
                         clientHandler.startClient(m_Connection, counter);
 

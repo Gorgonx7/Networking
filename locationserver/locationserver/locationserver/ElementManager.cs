@@ -9,55 +9,59 @@ namespace locationserverConsole
 {
     public class ElementManager
     {
-        private Dictionary<string, string> dictionary = new Dictionary<string, string>();
+        private Dictionary<string, string> dictionary = new Dictionary<string, string>(); // define the dictionary
         public ElementManager() {
-            try
-            {
-               // LoadElements();
-            }
-            catch {
-                Console.WriteLine("Unable to load dictionary, has it been created?");
-            }
+            
 
         }
         public string GetLocation(string pName) {
+            // try to get the value in the dictonary
             string Output = "";
             if (dictionary.TryGetValue(pName, out Output))
             {
-                return Output;
+                return Output; // if it is found return it
             }
             else
             {
-                return "ERROR: no entries found";
+                return "ERROR: no entries found"; // if not return the error message
             }
         }
 
         public bool UpdateLocation(string pName, string pLocation) {
 
+            //check if the dictionary contains it
             if (dictionary.ContainsKey(pName))
             {
-                dictionary[pName] = pLocation;
+                dictionary[pName] = pLocation; // if it does update
             }
             else {
-                dictionary.Add(pName, pLocation);
+                dictionary.Add(pName, pLocation); // if not create it
             }
-            Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
+            if (Program.m_Debug)
+            {
+                Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
+            }
             return true;
         }
         
         public void SaveElements(string Path) {
+            // try to save each of the elements in the dictionary
             StreamWriter streamWriter = new StreamWriter(Path);
             
             foreach (KeyValuePair<string, string> item in dictionary)
             {
-                streamWriter.WriteLine(item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value);
+                streamWriter.WriteLine(item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value); // pharse the data correctly
             }
 
             streamWriter.Flush();
            
         }
+        /// <summary>
+        /// loads the data from the specified file location
+        /// </summary>
+        /// <param name="Path">the path to the location</param>
         public void LoadElements(string Path) {
-            //StreamReader streamReader = new StreamReader(System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + @"\" + Path);
+            
             StreamReader streamReader = new StreamReader(Path);
             while (!streamReader.EndOfStream) {
                 string input = streamReader.ReadLine();
@@ -74,6 +78,10 @@ namespace locationserverConsole
             }
             streamReader.Close();
         }
+        /// <summary>
+        /// returns the dictionary, used in debugging
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, string> GetDictionary() {
             return dictionary;
         }

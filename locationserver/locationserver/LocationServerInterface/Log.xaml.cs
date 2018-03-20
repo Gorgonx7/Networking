@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using locationserverConsole;
+using System.Threading;
 
 namespace LocationServerInterface
 {
@@ -20,21 +21,25 @@ namespace LocationServerInterface
     /// </summary>
     public partial class Log : Window
     {
+        
         public Log()
         {
             InitializeComponent();
-            LogBox.ItemsSource = Program.m_Manager.GetDictionary();
+            LogBox.ItemsSource = locationserverConsole.Log.GetLog(); // reference the log
+            
+        }
+        
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // notify the main window that the log is closed
+            MainWindow.LogIsOpen = false;
             
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.LogIsOpen = false;
-        }
-
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            LogBox.ItemsSource = Program.m_Manager.GetDictionary();
+            //refresh the items in the listbox
+            LogBox.Items.Refresh();
         }
     }
 }

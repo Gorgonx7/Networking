@@ -5,22 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LocationServerInterface"
         mc:Ignorable="d"
-        Title="Log" Height="350" Width="525" Closing="Window_Closing" Activated="Window_Activated">
+        Title="Log" Height="350" Width="525" Closing="Window_Closing">
     <Grid>
-        <ListBox x:Name="LogBox" HorizontalAlignment="Left" Height="279" Margin="10,30,0,0" VerticalAlignment="Top" Width="497">
+        <ListBox x:Name="LogBox" HorizontalAlignment="Left" Height="254" Margin="10,30,0,0" VerticalAlignment="Top" Width="497">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ItemsControl x:Name="LogBoxItems">
-                        <Border BorderBrush="Black" BorderThickness="2">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Path=Value}" />
-                                <TextBlock Text="{Binding Path=Key}" />
-                            </StackPanel>
-                        </Border>
-                    </ItemsControl>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" />
+                    </StackPanel>
+    
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Label Content="Server Log" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top"/>
+        <Button Content="Refresh" HorizontalAlignment="Left" Margin="432,289,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
     </Grid>
 </Window>

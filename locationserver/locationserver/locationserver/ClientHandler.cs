@@ -11,12 +11,12 @@ namespace locationserverConsole
 {
     class ClientHandler
     {
-        Socket m_Socket;
-        int m_ClientNumber;
-        Protocol m_Protocol;
-        Type m_Type;
-        string m_Name;
-        string m_Location;
+        Socket m_Socket; // the current client socket
+        int m_ClientNumber; // the current client number
+        Protocol m_Protocol; // the current client protocol being used
+        Type m_Type; // the current type of message being processed
+        string m_Name; // the name of the request/update
+        string m_Location; // the location of the update
         public ClientHandler()
         {
 
@@ -24,32 +24,35 @@ namespace locationserverConsole
 
         public void startClient(Socket pClientSocket, int pClientNumber)
         {
-            m_Socket = pClientSocket;
-            m_ClientNumber = pClientNumber;
-            Log.AddLog("Accepting client" + m_ClientNumber + "OK", pClientSocket);
-            Thread Thread = new Thread(DoRequest);
-            Thread.Start();
+            m_Socket = pClientSocket; // assign the socket
+            m_ClientNumber = pClientNumber; // assign the client number
+            Log.AddLog("Accepting client" + m_ClientNumber + " OK", pClientSocket); // update the log 
+            Thread Thread = new Thread(DoRequest); // start a new thread to process the request
+            Thread.Start(); // start the request
         }
         private void DoRequest()
         {
-            int requestCount = 0;
+            
 
-            string[] dataFromClient;
-            requestCount = 0;
+            string[] dataFromClient; // store the data from the client
+            
 
 
             try
             {
-                requestCount = requestCount + 1;
-                NetworkStream networkStream = new NetworkStream(m_Socket);
-                networkStream.ReadTimeout = 1000;
-                networkStream.WriteTimeout = 1000;
+                
+                NetworkStream networkStream = new NetworkStream(m_Socket); // create and attatch the network stream
+                networkStream.ReadTimeout = Program.m_Timeout; // set the timeouts
+                networkStream.WriteTimeout = Program.m_Timeout;
                 StreamReader sr = new StreamReader(networkStream);
                 StreamWriter sw = new StreamWriter(networkStream);
-                
-                Console.WriteLine(" >> " + "From client-" + m_ClientNumber);
+                if (Program.m_Debug)
+                {
+                    Console.WriteLine(" >> " + "From client-" + m_ClientNumber);
+                }
+
                 List<string> data = new List<string>();
-                
+                //read in the data from the client in bytes into a list
                 string holder = "";
                 while (sr.Peek() > -1)
                 {
@@ -68,8 +71,8 @@ namespace locationserverConsole
                 }
 
                
-                
-                dataFromClient = new string[data.Count];
+                // phase that data into a static array 
+                dataFromClient = new string[data.Count]; 
                 for (int x = 0; x < data.Count; x++)
                 {
                     dataFromClient[x] = data[x];
@@ -80,11 +83,13 @@ namespace locationserverConsole
            
                 }
                 Log.AddLog("Recived data from client " + m_ClientNumber + "Data: " + dataFromClient, m_Socket);
-
+                //phase the data from the client
                 if (!Phase(dataFromClient))
                 {
+                    // if it is not a HTTP request it's a whois request
                     m_Protocol = Protocol.WhoIs;
-                    if (dataFromClient[0].Split(' ').Length >= 2)
+                    //get the data from the client and then add that to the two respective strings
+                    if (dataFromClient[0].Split(' ').Length >= 2) 
                     {
                         m_Type = Type.update;
                         m_Name = dataFromClient[0].Split(' ')[0];
@@ -98,26 +103,22 @@ namespace locationserverConsole
                     else
                     {
                         m_Type = Type.lookup;
-                        m_Name = dataFromClient[0];
+                        m_Name = dataFromClient[0]; // if it's a look up just take the name
                     }
                 }
 
-
+                // switch the type of message to be sent
                 switch (m_Type)
                 {
                     case Type.lookup:
-                        Outputer.Locate(sw, m_Protocol, m_Name, m_Socket, m_ClientNumber);
+                        Outputer.Locate(sw, m_Protocol, m_Name, m_Socket, m_ClientNumber); // call the respective output method
                         break;
                     case Type.update:
                         Program.m_Manager.UpdateLocation(m_Name, m_Location);
                         Outputer.Update(sw, m_Protocol, m_Socket, m_ClientNumber);
                         break;
                 }
-                if (Program.isSavingFile)
-                {
-
-                    //Program.m_Manager.SaveElements(Program.SaveFilePath);
-                }
+                
             }
             catch (Exception ex)
             {
@@ -126,17 +127,22 @@ namespace locationserverConsole
             }
             finally
             {
-                m_Socket.Close();
+                m_Socket.Close(); // tidy up
             }
 
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>if it is a HTTP request return true, if it is a who is request return false</returns>
         private bool Phase(string[] args)
         {
             string holderVersion = args[0];
             string version = "";
             try
             {
-                version = holderVersion.Substring(holderVersion.Length - 9, 9).Trim();
+                version = holderVersion.Substring(holderVersion.Length - 9, 9).Trim(); // see if it a http/1.0+ request
             }
             catch {
                 version = "";
@@ -155,6 +161,7 @@ namespace locationserverConsole
                  */
                 m_Protocol = Protocol.HTTP1;
                 string[] holder = args[0].Split(' ');
+                // determine what type of request it is and extract the data
                 switch (holder[0])
                 {
                     case "POST":
@@ -206,6 +213,7 @@ namespace locationserverConsole
                 name=<name>&location=<location>
 
                  */
+                // determine what type of request it is and extract the data
                 string[] holder = args[0].Split(' ');
                 switch (holder[0])
                 {
@@ -263,12 +271,14 @@ namespace locationserverConsole
             {
                 try
                 {
+                    // if it is a http/0.9 request check for it
                     if (args[0].Split(' ')[0] == "GET" && args[0].Split(' ')[1][0] == '/' || args[0].Split(' ')[0] == "PUT" && args[0].Split(' ')[1][0] == '/')
                     {
                         m_Protocol = Protocol.HTTP9;
-                        if (args[0].Split(' ')[0] == "GET")
+                        if (args[0].Split(' ')[0] == "GET") // define the type of request
                         {
                             /*GET<space>/<name><CR><LF>*/
+                            // extract the data
                             m_Type = Type.lookup;
                             string Holder = "";
                             for (int index = 5; index < args[0].Length; index++)
@@ -304,17 +314,17 @@ namespace locationserverConsole
 
                     }
                     else {
-                        return false;
+                        return false; // it must be a who is request
                     }
                 }
                 catch
                 {
-                    return false;
+                    return false; // must be a whois request
                 }
                 
                 
             }
-            return true;
+            return true; // the appropreate settings have been found and it is a http request
         }
        
     }

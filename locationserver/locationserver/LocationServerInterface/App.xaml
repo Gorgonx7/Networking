@@ -6,4 +6,6 @@
     <Application.Resources>
          
     </Application.Resources>
+    <!-- app_Startup is found in app.cs and is called on start up
+         Application_Exit is in app.xaml.cs and is called on application close-->
 </Application>
