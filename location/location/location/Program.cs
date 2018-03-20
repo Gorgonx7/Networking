@@ -19,57 +19,57 @@ namespace location
         public static void Main(string[] args)
         {
             start(args); // start the client
-            
-
-            // legasy code incase I need to debug
-           /* try
-            {
-
-                TcpClient client = new TcpClient();
-                client.Connect("whois.net.dcs.hull.ac.uk", 43);
-                client.GetStream().ReadTimeout = 1000;
-                StreamWriter sw = new StreamWriter(client.GetStream());
-                StreamReader sr = new StreamReader(client.GetStream());
-                string exception = args[0];
 
 
-                for (int x = 0; x < args.Length; x++)
-                {
-                    if (x == args.Length - 1)
-                    {
-                        sw.WriteLine(args[x]);
-                    }
-                    else
-                    {
-                        sw.Write(args[x] + " ");
-                    }
-                }
+            #region legacy code incase I need to debug
+            /* try
+             {
 
-                sw.Flush();
+                 TcpClient client = new TcpClient();
+                 client.Connect("whois.net.dcs.hull.ac.uk", 43);
+                 client.GetStream().ReadTimeout = 1000;
+                 StreamWriter sw = new StreamWriter(client.GetStream());
+                 StreamReader sr = new StreamReader(client.GetStream());
+                 string exception = args[0];
 
 
-                string holder = sr.ReadToEnd();
-                if (holder == "OK\r\n" && args.Length >= 2)
-                {
-                    Console.WriteLine(args[0] + " location changed to be " + args[1]);
-                }
-                else if (holder != "ERROR: no entries found\r\n")
-                {
-                    Console.WriteLine(args[0] + " is " + holder.TrimEnd());
-                }
-                else
-                {
+                 for (int x = 0; x < args.Length; x++)
+                 {
+                     if (x == args.Length - 1)
+                     {
+                         sw.WriteLine(args[x]);
+                     }
+                     else
+                     {
+                         sw.Write(args[x] + " ");
+                     }
+                 }
 
-                    Console.WriteLine(holder);
-                }
-                
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            */
+                 sw.Flush();
 
+
+                 string holder = sr.ReadToEnd();
+                 if (holder == "OK\r\n" && args.Length >= 2)
+                 {
+                     Console.WriteLine(args[0] + " location changed to be " + args[1]);
+                 }
+                 else if (holder != "ERROR: no entries found\r\n")
+                 {
+                     Console.WriteLine(args[0] + " is " + holder.TrimEnd());
+                 }
+                 else
+                 {
+
+                     Console.WriteLine(holder);
+                 }
+
+             }
+             catch (Exception e)
+             {
+                 Console.WriteLine(e.Message);
+             }
+             */
+#endregion
         }
         /// <summary>
         /// used to start a OO request

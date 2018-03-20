@@ -44,7 +44,7 @@ namespace locationInterface
             catch
             {
                 MessageBox.Show("The port number has to be a valid whole number");
-                return // jump out of the method should use return
+                return; // jump out of the method should use return
             }
             try
             {

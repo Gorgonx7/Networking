@@ -116,7 +116,7 @@ namespace locationserverConsole
                 if (Program.isSavingFile)
                 {
 
-                    Program.m_Manager.SaveElements(Program.SaveFilePath);
+                    //Program.m_Manager.SaveElements(Program.SaveFilePath);
                 }
             }
             catch (Exception ex)

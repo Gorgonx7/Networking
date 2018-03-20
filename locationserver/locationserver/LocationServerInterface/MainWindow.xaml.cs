@@ -128,7 +128,9 @@ namespace LocationServerInterface
 
                 try
                 {
-                    locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
+                    Program.isSavingFile = true;
+                    Program.SaveFilePath = PathBox.Text;
+                   // locationserverConsole.Program.m_Manager.SaveElements(PathBox.Text);
                 }
                 catch
                 {
@@ -177,7 +179,7 @@ namespace LocationServerInterface
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
-                dialog.Filter = "Text|*.txt|All|*.*";
+                dialog.Filter = "Text|*.txt|All|*.*|Log|*.log";
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
@@ -194,7 +196,7 @@ namespace LocationServerInterface
         {
             using (var dialog = new System.Windows.Forms.OpenFileDialog())
             {
-                dialog.Filter = "Text|*.txt|All|*.*";
+                dialog.Filter = "Text|*.txt|All|*.*|Dat|*.dat";
                 System.Windows.Forms.DialogResult result = dialog.ShowDialog();
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
@@ -210,6 +212,7 @@ namespace LocationServerInterface
 
         private void PathBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            Program.isSavingFile = true;
             Program.SaveFilePath = PathBox.Text;
         }
 

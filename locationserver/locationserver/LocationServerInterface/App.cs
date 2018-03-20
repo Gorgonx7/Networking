@@ -14,10 +14,12 @@ namespace LocationServerInterface
     {
         [DllImport("kernel32")]
         static extern bool AllocConsole();
-
+        [DllImport("kernel32")]
+        static extern bool FreeConsole();
         void app_Startup(object sender, StartupEventArgs e) {
             if (e.Args.Contains("-w"))
             {
+                FreeConsole();
                 MainWindow window = new MainWindow();
                 for (int x = 0; x < e.Args.Length; x++) {
                     switch (e.Args[x]) {
