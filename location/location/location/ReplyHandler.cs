@@ -9,14 +9,20 @@ namespace location
     class ReplyHandler
     {
         string reply = "";
+        /// <summary>
+        /// The constructor to reply handler that process the reply from the serrver
+        /// </summary>
+        /// <param name="sr">the stream reader connected to the server</param>
+        /// <param name="pMessage">the message that was sent to the server</param>
         public ReplyHandler(StreamReader sr, Message pMessage)
         {
             
-            string holder = Readdata(sr, pMessage.GetDebug()).Trim('\0');
+            string holder = Readdata(sr, pMessage.GetDebug()).Trim('\0'); // the holder from the data holds the data read from the server
             if (pMessage.GetDebug()) {
                 Console.WriteLine(holder);
                 Console.WriteLine("----------------------------------------------------------------------------------");
             }
+            //phase the reply based on the protocol
             if (pMessage.GetProtocol() == MessageProtocol.WhoIs)
             {
                 try
@@ -49,6 +55,7 @@ namespace location
                 {
                     try
                     {
+                        // this handles html requests by looking for the doctype tag on line 14
                         if (holder.Split((char)13)[14].Contains("<!DOCTYPE html>")) {
                             string[] HTMLholder = holder.Split((char)13);
                             bool first = true;
@@ -64,7 +71,7 @@ namespace location
                                     Console.WriteLine(HTMLholder[x]);
                                 }
                             }
-                            goto JumpOut;
+                            goto JumpOut;// jump out as too not hit the rest of the request
                         }
                     }
                     catch {
@@ -95,25 +102,35 @@ namespace location
 
 
         }
+        /// <summary>
+        /// returns the reply
+        /// </summary>
+        /// <returns>returns the string to be passed to wpf</returns>
         public string GetReply() {
             return reply;
         }
+        /// <summary>
+        /// reads the data in bytes from the server
+        /// </summary>
+        /// <param name="sr">the stream reader tied to the network</param>
+        /// <param name="debug">if the server is in debug mode</param>
+        /// <returns>the string containing the data</returns>
         private string Readdata(StreamReader sr, bool debug) {
-            Stream stream = sr.BaseStream;
-            byte[] buffer = new byte[25];
-            long read = 0;
+            Stream stream = sr.BaseStream; // gets the base stream from the stream reader
+            byte[] buffer = new byte[25]; // creates the buffer object
+            long read = 0; // the current chunk that is read in
 
-            int chunk;
+            int chunk; // the current chunk
             try
             {
                 
-                while ((chunk = stream.Read(buffer, (int)read, buffer.Length - (int)read)) > 0)
+                while ((chunk = stream.Read(buffer, (int)read, buffer.Length - (int)read)) > 0) // reads the data in byte form, this is interesting as it reads all the data quickly
                 {
-                    read += chunk;
+                    read += chunk; // add the data to the read
 
                     // If we've reached the end of our buffer, check to see if there's
                     // any more information
-                    if (read == buffer.Length)
+                    if (read == buffer.Length) 
                     {
                         int nextByte = stream.ReadByte();
 
@@ -140,16 +157,17 @@ namespace location
             }
             catch (Exception e)
             {
-                        byte[] ret = new byte[read];
+                // this is triggered when the timeout has expired or if any exception is thrown
+                        byte[] ret = new byte[read]; // resize the buffer
                         Array.Copy(buffer, ret, read);
                 if (debug) {
                     Console.WriteLine("Client timed out, consider extending the timeout period if you require more data");
                 }
                 try
                 {
-                    if (System.Text.Encoding.ASCII.GetString(buffer).Split((char)13)[14].Contains("<!DOCTYPE html>"))
+                    if (System.Text.Encoding.ASCII.GetString(buffer).Split((char)13)[14].Contains("<!DOCTYPE html>")) // if it's a web server request
                     {
-                        
+                        // return any data read in
                         return System.Text.Encoding.ASCII.GetString(buffer);
                     }
                 }
@@ -158,9 +176,9 @@ namespace location
                 }
                 if(buffer.Length == 0)
                 {
-                    throw e;
+                    throw e; // if the buffer is 0 throw an error
                 }
-                return System.Text.Encoding.ASCII.GetString(buffer);
+                return System.Text.Encoding.ASCII.GetString(buffer); // return any data readin if when have read in data
                 
             }
         }

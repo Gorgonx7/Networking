@@ -6,4 +6,5 @@
     <Application.Resources>
          
     </Application.Resources>
+    <!-- the startup information has been changed to go to the method in app.cs called app_Startup-->
 </Application>

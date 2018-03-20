@@ -21,30 +21,30 @@ namespace locationInterface
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool m_ConsoleisOpen = false;
+        private bool m_ConsoleisOpen = false; // bool that is used to specify debugging
         public MainWindow()
         {
             InitializeComponent();
         }
         [DllImport("Kernel32")]
-        public static extern void AllocConsole();
+        public static extern void AllocConsole(); // external method to open the console
 
         [DllImport("Kernel32")]
-        public static extern void FreeConsole();
+        public static extern void FreeConsole(); // external method to clsoe the console
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int Portnumb;
-            int Timeout;
-            string hostname;
+            int Portnumb; // the port for the client to send the message too
+            int Timeout; // the timeout for the client side of the application
+            string hostname; // the host name of the server that the message will be sent too
             try
             {
-                Portnumb = int.Parse(Port.Text);
+                Portnumb = int.Parse(Port.Text); // try to convert the port to an int, but 
             }
             catch
             {
                 MessageBox.Show("The port number has to be a valid whole number");
-                goto Escape;
+                return // jump out of the method should use return
             }
             try
             {
@@ -53,9 +53,9 @@ namespace locationInterface
             catch
             {
                 MessageBox.Show("The timeout period has to be a valid whole number");
-                goto Escape;
+                return;
             }
-            location.MessageProtocol messageProtocol;
+            location.MessageProtocol messageProtocol; // define the message protocol relative to the dropdown box
             switch (Protocol.Text.Trim()) {
                 
                     
@@ -74,27 +74,29 @@ namespace locationInterface
             }
             if ((bool)UseLocalhost.IsChecked)
             {
-                hostname = "localhost";
+                hostname = "localhost"; // set the hostname to localhost if the checkbox is checked
             }
             else
             {
-                hostname = Hostname.Text;
+                hostname = Hostname.Text; // if it is not set it to the host name specified
             }
             if (!LocationBox.IsEnabled) {
-               MessageBox.Show(location.Program.WPFInitialise(Username.Text, hostname, Portnumb, Timeout, messageProtocol, (bool)isDebug.IsChecked));
+                //call the lookup method
+               MessageBox.Show(location.Program.WPFInitialise(Username.Text, hostname, Portnumb, Timeout, messageProtocol, (bool)isDebug.IsChecked)); 
             }
             else
             {
+                //call the update method
                MessageBox.Show(location.Program.WPFInitialise(Username.Text, LocationBox.Text, hostname, Portnumb, Timeout, messageProtocol, (bool)isDebug.IsChecked));
 
             }
 
-            Escape:;
+            
         }
 
         private void UseLocalhost_Checked(object sender, RoutedEventArgs e)
         {
-            if ((bool)UseLocalhost.IsChecked)
+            if ((bool)UseLocalhost.IsChecked) // this is due to uncheck using the same method
             {
                 Hostname.IsEnabled = false;
             }
@@ -106,7 +108,7 @@ namespace locationInterface
 
         private void IsUpdate_Checked(object sender, RoutedEventArgs e)
         {
-            if ((bool)IsUpdate.IsChecked)
+            if ((bool)IsUpdate.IsChecked) // this is due to uncheck using the same method
             {
                 LocationBox.IsEnabled = true;
             }
@@ -118,9 +120,9 @@ namespace locationInterface
 
         private void isDebug_Checked(object sender, RoutedEventArgs e)
         {
-            if (!m_ConsoleisOpen)
+            if (!m_ConsoleisOpen) // this enables debuging
             {
-                AllocConsole();
+                AllocConsole(); // this does not bind the console so debug mode will not work unless you run without native debugging
                 m_ConsoleisOpen = true;
                 Console.WriteLine("Started debug mode");
             }
