@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B549A807-C5B2-4C3E-A350-9AF1D3BB982E}</ProjectGuid>
+    <ProjectGuid>{F20C1C12-ADF2-4792-B566-83C7738A4531}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>locationserver</RootNamespace>
-    <AssemblyName>locationserver</AssemblyName>
+    <RootNamespace>locationConsole</RootNamespace>
+    <AssemblyName>locationConsole</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -26,7 +26,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>.\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -42,10 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Element.cs" />
-    <Compile Include="ElementManager.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplyHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

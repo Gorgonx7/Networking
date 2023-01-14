@@ -1,8 +1,8 @@
 # Networking
 Networking and user interface ACW
+The following features have been fully implemented
 
-Contained within this zip folder are two folders containing the visual studio projects for the server and client
-
-# List of current implimented features 
-
-  - 
+	+ updates and locates for all protocols
+	+ UI as per the specification
+	+ saving and loading of dictionarys and logs server side
+	+ All functionallity as per the specfication

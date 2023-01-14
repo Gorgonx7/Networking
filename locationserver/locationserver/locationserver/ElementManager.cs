@@ -5,59 +5,86 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace locationserver
+namespace locationserverConsole
 {
-    class ElementManager
+    public class ElementManager
     {
-        private List<Element> m_Elements = new List<Element>();
+        private Dictionary<string, string> dictionary = new Dictionary<string, string>(); // define the dictionary
         public ElementManager() {
-            LoadElements(ref m_Elements);
+            
 
         }
         public string GetLocation(string pName) {
-            foreach (Element e in m_Elements) {
-                if (e.getName() == pName) {
-                    return e.getLocation();
-                }
+            // try to get the value in the dictonary
+            string Output = "";
+            if (dictionary.TryGetValue(pName, out Output))
+            {
+                return Output; // if it is found return it
             }
-            return "ERROR: no entries found";
+            else
+            {
+                return "ERROR: no entries found"; // if not return the error message
+            }
         }
 
         public bool UpdateLocation(string pName, string pLocation) {
-            foreach (Element e in m_Elements) {
-                if (e.getName() == pName) {
-                    return e.updateLocation(pLocation);
-                }
+
+            //check if the dictionary contains it
+            if (dictionary.ContainsKey(pName))
+            {
+                dictionary[pName] = pLocation; // if it does update
             }
-            m_Elements.Add(new Element(pName, pLocation));
-            Console.WriteLine("Added New Entry: " + pName + " At " + pLocation);
+            else {
+                dictionary.Add(pName, pLocation); // if not create it
+            }
+            if (Program.m_Debug)
+            {
+                Console.WriteLine("Added or changed Entry: " + pName + " At " + pLocation);
+            }
             return true;
         }
-        public void SaveElements() {
-            StreamWriter sw = new StreamWriter("database.txt");
-            foreach (Element e in m_Elements) {
-                sw.WriteLine(e.ToString());
-            }
-            sw.Flush();
-            sw.Close();
-        }
-        private void LoadElements(ref List<Element> pElements) {
-            try
+        
+        public void SaveElements(string Path) {
+            // try to save each of the elements in the dictionary
+            StreamWriter streamWriter = new StreamWriter(Path);
+            
+            foreach (KeyValuePair<string, string> item in dictionary)
             {
-                StreamReader sr = new StreamReader("database.txt");
-                while (!sr.EndOfStream)
-                {
-                    string Element = sr.ReadLine();
-                    string[] SplitElement = Element.Split(',');
-                    pElements.Add(new Element(SplitElement[0], SplitElement[1]));
-                }
-                sr.Close();
+                streamWriter.WriteLine(item.Key.Length + " " + item.Key + " " + item.Value.Length + " " + item.Value); // pharse the data correctly
             }
-            catch {
 
-            }
+            streamWriter.Flush();
+           
         }
-
-
+        /// <summary>
+        /// loads the data from the specified file location
+        /// </summary>
+        /// <param name="Path">the path to the location</param>
+        public void LoadElements(string Path) {
+            
+            StreamReader streamReader = new StreamReader(Path);
+            while (!streamReader.EndOfStream) {
+                string input = streamReader.ReadLine();
+                string key = "";
+                string value = "";
+                int keyLength = int.Parse(input.Trim().Split(' ')[0]);
+                for (int x = keyLength.ToString().Length + 1; x < keyLength + keyLength.ToString().Length + 1; x++) {
+                    key += input[x];
+                }
+                // use the information above to find when the second part of the sequence starts
+                int valueLength = int.Parse(input.Substring(keyLength + keyLength.ToString().Length + 2).Split(' ')[0]);
+                value = input.Substring(keyLength + keyLength.ToString().Length + valueLength.ToString().Length + 3);
+                dictionary.Add(key, value);
+            }
+            streamReader.Close();
+        }
+        /// <summary>
+        /// returns the dictionary, used in debugging
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, string> GetDictionary() {
+            return dictionary;
+        }
+        
     }
 }

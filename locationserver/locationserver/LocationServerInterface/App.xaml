@@ -1,0 +1,11 @@
+﻿<Application x:Class="LocationServerInterface.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:LocationServerInterface"
+             Startup="app_Startup" Exit="Application_Exit">
+    <Application.Resources>
+         
+    </Application.Resources>
+    <!-- app_Startup is found in app.cs and is called on start up
+         Application_Exit is in app.xaml.cs and is called on application close-->
+</Application>
